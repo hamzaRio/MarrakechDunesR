@@ -65,8 +65,17 @@ app.use((req, res, next) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
+    // Log error for debugging (but don't expose details to client)
+    console.error('Server error:', {
+      status,
+      message: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+      path: _req.path,
+      method: _req.method
+    });
+
     res.status(status).json({ message });
-    throw err;
+    // REMOVED: throw err; - This was causing server crashes
   });
 
   // Attach Vite only in dev using a dynamic import (so production build doesn't pull vite)

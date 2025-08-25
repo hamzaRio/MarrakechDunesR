@@ -44,10 +44,8 @@ export class ObjectStorageService {
       )
     );
     if (paths.length === 0) {
-      throw new Error(
-        "PUBLIC_OBJECT_SEARCH_PATHS not set. Create a bucket in 'Object Storage' " +
-          "tool and set PUBLIC_OBJECT_SEARCH_PATHS env var (comma-separated paths)."
-      );
+      console.warn('PUBLIC_OBJECT_SEARCH_PATHS not set. Object storage features will be disabled.');
+      return [];
     }
     return paths;
   }
@@ -55,24 +53,32 @@ export class ObjectStorageService {
   getPrivateObjectDir(): string {
     const dir = process.env.PRIVATE_OBJECT_DIR || "";
     if (!dir) {
-      throw new Error(
-        "PRIVATE_OBJECT_DIR not set. Create a bucket in 'Object Storage' " +
-          "tool and set PRIVATE_OBJECT_DIR env var."
-      );
+      console.warn('PRIVATE_OBJECT_DIR not set. Private object storage features will be disabled.');
+      return "";
     }
     return dir;
   }
 
   async searchPublicObject(filePath: string): Promise<File | null> {
-    for (const searchPath of this.getPublicObjectSearchPaths()) {
+    const searchPaths = this.getPublicObjectSearchPaths();
+    if (searchPaths.length === 0) {
+      return null; // Graceful fallback
+    }
+
+    for (const searchPath of searchPaths) {
       const fullPath = `${searchPath}/${filePath}`;
       const { bucketName, objectName } = parseObjectPath(fullPath);
       const bucket = objectStorageClient.bucket(bucketName);
       const file = bucket.file(objectName);
 
-      const [exists] = await file.exists();
-      if (exists) {
-        return file;
+      try {
+        const [exists] = await file.exists();
+        if (exists) {
+          return file;
+        }
+      } catch (error) {
+        console.warn(`Error checking object ${fullPath}:`, error);
+        continue; // Try next path
       }
     }
 
