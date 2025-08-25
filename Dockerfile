@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY client/package*.json ./client/
 COPY server/package*.json ./server/
-COPY shared/package.json* ./shared/ 2>/dev/null || true
+COPY shared/package.json* ./shared/
 
 # Install all dependencies including dev dependencies
 RUN npm install --legacy-peer-deps
