@@ -45,7 +45,7 @@ A full-stack web application for booking authentic Moroccan desert adventures an
 
 5. **Access the application**
    - Frontend: http://localhost:5000
-   - Admin login: username: `nadia`, password: `Marrakech@2025` (development only)
+   - Admin panel: http://localhost:5000/admin/login
 
 ## Environment Variables
 
@@ -58,12 +58,15 @@ Copy `.env.example` to `.env` and configure:
 
 ## Admin Access
 
-**Development credentials:**
-- Superadmin: `nadia` / `Marrakech@2025`
-- Admin: `ahmed` / `Marrakech@2025`
-- Admin: `yahia` / `Marrakech@2025`
+**For Development:**
+- Default admin accounts are created automatically on first run
+- Check the console output for initial credentials
+- **⚠️ Always change default passwords in production!**
 
-**⚠️ Change these passwords in production using environment variables!**
+**For Production:**
+- Set `ADMIN_PASSWORD` and `SUPERADMIN_PASSWORD` environment variables
+- Use strong, unique passwords
+- Enable two-factor authentication if available
 
 ## Deployment
 
