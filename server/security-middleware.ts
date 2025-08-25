@@ -191,12 +191,12 @@ export const adminAuditLog = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
-// Create session store with fallback to memory store
+// Create session store with MongoDB persistence
 const createSessionStore = () => {
   const mongoUrl = process.env.MONGODB_URI || process.env.MONGO_URI;
   
   if (!mongoUrl) {
-    console.log('MongoDB URL not found. Using memory store for sessions.');
+    console.error('CRITICAL: MONGODB_URI not set. Sessions will be lost on server restart!');
     const MemoryStoreSession = MemoryStore(session);
     return new MemoryStoreSession({
       checkPeriod: 24 * 60 * 60 * 1000, // 24 hours
@@ -205,13 +205,15 @@ const createSessionStore = () => {
     });
   }
   
-  // Always use memory store for now to avoid connection issues
-  console.log('Using memory store for sessions to avoid MongoDB connection blocking.');
-  const MemoryStoreSession = MemoryStore(session);
-  return new MemoryStoreSession({
-    checkPeriod: 24 * 60 * 60 * 1000, // 24 hours
-    ttl: 24 * 60 * 60 * 1000, // 24 hours
-    max: 1000 // Maximum number of sessions
+  // Use MongoDB store for persistent sessions
+  return MongoStore.create({
+    mongoUrl,
+    collectionName: 'sessions',
+    ttl: 24 * 60 * 60, // 24 hours in seconds
+    autoRemove: 'native',
+    crypto: {
+      secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production'
+    }
   });
 };
 
@@ -219,7 +221,7 @@ const createSessionStore = () => {
 export const sessionSecurity = {
   name: 'marrakech.session',
   secret: process.env.SESSION_SECRET || (() => {
-    console.warn('WARNING: Using default session secret. Set SESSION_SECRET environment variable for production!');
+    console.error('CRITICAL: SESSION_SECRET not set. Set this environment variable for production!');
     return 'dev-session-secret-change-in-production';
   })(),
   resave: false,

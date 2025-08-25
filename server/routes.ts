@@ -57,10 +57,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   app.use((req: Request, res: Response, next: NextFunction) => {
     const origin = req.headers.origin;
+    
+    // Set Vary header for proper caching
+    res.setHeader('Vary', 'Origin');
+    
     if (origin && clientUrls.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+    } else {
+      // Don't set credentials for non-matching origins
+      res.setHeader('Access-Control-Allow-Credentials', 'false');
     }
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     
@@ -131,7 +139,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     try {
       const user = await storage.getUserByUsername(username);
-      console.log('Found user:', user ? { username: user.username, role: user.role } : null);
       
       if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });

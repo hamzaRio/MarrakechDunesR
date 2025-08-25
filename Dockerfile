@@ -22,8 +22,9 @@ RUN npm run build --workspace=server
 FROM node:20-slim AS prod
 WORKDIR /app
 
-# Install curl for health checks
-RUN apt-get update && apt-get install -y curl
+# Install curl for health checks and clean cache
+RUN apt-get update && apt-get install -y curl && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy package files for production dependencies
 COPY --from=build /app/package*.json ./
