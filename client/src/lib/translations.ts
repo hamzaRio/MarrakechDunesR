@@ -228,10 +228,123 @@ export const translations = {
       analytics: "Analyses",
       settings: "Paramètres"
     }
+  },
+  ar: {
+    nav: {
+      home: "الرئيسية",
+      activities: "الأنشطة",
+      reviews: "التقييمات",
+      contact: "اتصل بنا",
+      admin: "المدير",
+      booking: "الحجز"
+    },
+    hero: {
+      title: "اكتشف المغامرات المغربية الأصيلة",
+      subtitle: "احجز تجارب لا تُنسى في أجمل وجهات المغرب",
+      cta: "استكشف الأنشطة",
+      trustBadge: "موثوق به من قبل أكثر من 10,000 مسافر"
+    },
+    heroTitle: "مغامرات مغربية",
+    heroTitleHighlight: "أصيلة",
+    heroSubtitle: "احجز تجارب لا تُنسى في أجمل وجهات المغرب",
+    bookAdventure: "احجز مغامرتك",
+    bookingSubtitle: "احجز تجربتك المغربية الأصيلة مع مرشدينا الخبراء",
+    bookingDetails: "تفاصيل الحجز",
+    featuredTitle: "التجارب المميزة",
+    featuredSubtitle: "اكتشف مغامراتنا المغربية الأكثر شعبية",
+    agencyIntroTitle: "شريكك الموثوق للسفر في المغرب",
+    agencyIntroText: "تتخصص مراكش دونز في التجارب المغربية الأصيلة، من مغامرات الصحراء إلى الجولات الثقافية. نخلق ذكريات لا تُنسى في أجمل وجهات المغرب.",
+    agencyDescription: "عش سحر المغرب مع مغامراتنا المختارة بعناية",
+    aboutTitle: "عن مراكش دونز",
+    aboutText: "نحن شغوفون بمشاركة جمال المغرب المذهل وثقافته الغنية مع المسافرين من جميع أنحاء العالم.",
+    galleryTitle: "معرض الصور",
+    gallerySubtitle: "لحظات مذهلة من مغامراتنا",
+    visitOffice: "زر مكتبنا",
+    exploreActivities: "استكشف الأنشطة",
+    bookNow: "احجز الآن",
+    happyTravelers: "مسافرون سعداء",
+    yearsExperience: "سنوات الخبرة",
+    activitiesTitle: "مغامراتنا المغربية",
+    activitiesSubtitle: "اكتشف تجارب أصيلة في أجمل وجهات المغرب",
+    activities: {
+      title: "تجاربنا",
+      bookNow: "احجز الآن",
+      duration: "المدة",
+      category: "الفئة",
+      price: "السعر",
+      perPerson: "للشخص الواحد",
+      viewDetails: "عرض التفاصيل والحجز",
+      available: "متاح",
+      soldOut: "نفذت",
+      change: "تغيير"
+    },
+    booking: {
+      title: "احجز مغامرتك",
+      customerName: "الاسم الكامل",
+      customerPhone: "رقم الهاتف",
+      email: "البريد الإلكتروني",
+      phone: "رقم الهاتف",
+      numberOfPeople: "عدد الأشخاص",
+      preferredDate: "التاريخ المفضل",
+      preferredTime: "الوقت المفضل",
+      notes: "طلبات خاصة",
+      submit: "تأكيد الحجز",
+      success: "تم تأكيد الحجز! سنتواصل معك قريباً.",
+      totalAmount: "المبلغ الإجمالي",
+      selectActivity: "اختر النشاط",
+      chooseActivity: "اختر نشاطاً",
+      selectDate: "اختر التاريخ",
+      customerDetails: "تفاصيل العميل",
+      confirmation: "التأكيد",
+      next: "التالي",
+      previous: "السابق",
+      participantNames: "أسماء المشاركين",
+      selectNumberOfPeople: "اختر عدد الأشخاص",
+      person: "شخص",
+      people: "أشخاص",
+      personalInformation: "المعلومات الشخصية",
+      selectExperience: "اختر تجربتك",
+      bookingDetailsSection: "تفاصيل الحجز"
+    },
+    reviews: {
+      title: "تقييمات العملاء",
+      writeReview: "اكتب تقييماً",
+      rating: "التقييم",
+      verified: "حجز موثق",
+      helpful: "مفيد",
+      stars: "نجوم",
+      submitReview: "إرسال التقييم",
+      comment: "تقييمك"
+    },
+    footer: {
+      about: "عن مراكش دونز",
+      description: "بوابتك إلى المغامرات المغربية الأصيلة وتجارب الصحراء.",
+      contact: "معلومات الاتصال",
+      phone: "الهاتف",
+      email: "البريد الإلكتروني",
+      address: "العنوان",
+      followUs: "تابعنا",
+      rights: "جميع الحقوق محفوظة"
+    },
+    admin: {
+      adminAccess: "الوصول للمدير",
+      loginSubtitle: "سجل دخولك لإدارة الحجوزات والأنشطة",
+      username: "اسم المستخدم",
+      password: "كلمة المرور",
+      signIn: "تسجيل الدخول",
+      signingIn: "جاري تسجيل الدخول...",
+      dashboard: "لوحة التحكم",
+      loginSuccess: "تم تسجيل الدخول بنجاح",
+      loginFailed: "فشل تسجيل الدخول",
+      logout: "تسجيل الخروج",
+      bookings: "الحجوزات",
+      analytics: "التحليلات",
+      settings: "الإعدادات"
+    }
   }
 };
 
-export type Language = 'en' | 'fr';
+export type Language = 'en' | 'fr' | 'ar';
 
 export function getTranslation(lang: Language, key: string): string {
   const keys = key.split('.');

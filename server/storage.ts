@@ -822,32 +822,21 @@ class MongoStorage implements IStorage {
         return;
       }
 
-      // CRITICAL: Require environment variables for admin passwords in production
+      // CRITICAL: Require environment variables for admin passwords
       const superadminPassword = process.env.SUPERADMIN_PASSWORD;
       const adminPassword = process.env.ADMIN_PASSWORD;
       
-      if (process.env.NODE_ENV === 'production') {
-        if (!superadminPassword || !adminPassword) {
-          console.error('CRITICAL: Admin passwords not set in environment variables!');
-          console.error('Set SUPERADMIN_PASSWORD and ADMIN_PASSWORD environment variables.');
-          console.error('Skipping admin user creation for security.');
-          return;
-        }
-      } else {
-        // Development fallback with warning
-        if (!superadminPassword || !adminPassword) {
-          console.warn('WARNING: Using default admin passwords in development.');
-          console.warn('Set SUPERADMIN_PASSWORD and ADMIN_PASSWORD for security.');
-        }
+      if (!superadminPassword || !adminPassword) {
+        console.error('CRITICAL: Admin passwords not set in environment variables!');
+        console.error('Set SUPERADMIN_PASSWORD and ADMIN_PASSWORD environment variables.');
+        console.error('Skipping admin user creation for security.');
+        return;
       }
       
-      const finalSuperadminPassword = superadminPassword || 'Marrakech@2025';
-      const finalAdminPassword = adminPassword || 'Marrakech@2025';
-      
       const adminUsers = [
-        { username: 'nadia', password: finalSuperadminPassword, role: 'superadmin' },
-        { username: 'ahmed', password: finalAdminPassword, role: 'admin' },
-        { username: 'yahia', password: finalAdminPassword, role: 'admin' },
+        { username: 'nadia', password: superadminPassword, role: 'superadmin' },
+        { username: 'ahmed', password: adminPassword, role: 'admin' },
+        { username: 'yahia', password: adminPassword, role: 'admin' },
       ];
 
       for (const userData of adminUsers) {

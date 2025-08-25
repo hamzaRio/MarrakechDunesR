@@ -1,5 +1,7 @@
 services:
   - type: web
+    name: marrakech-dunes-backend
+    runtime: node
     envVars:
       - key: NODE_ENV
         value: production
@@ -7,21 +9,15 @@ services:
         value: <your-mongo-uri>
       - key: SESSION_SECRET
         sync: false
-      - key: JWT_SECRET
+      - key: SUPERADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_PASSWORD
         sync: false
 
-      # WhatsApp configuration (optional)
-      - key: WHATSAPP_API_KEY
-        sync: false
-      - key: ADMIN_DEFAULT_PASSWORD
-        sync: false
+      # WhatsApp configuration
       - key: CLIENT_URL
         value: https://marrakech-dunes.vercel.app,http://localhost:5173
       - key: WHATSAPP_RECEIVERS
-        sync: false
-      - key: ADMIN_PHONE_YAHIA
-        sync: false
-      - key: ADMIN_PHONE_NADIA
         sync: false
       - key: PORT
         value: 5000
