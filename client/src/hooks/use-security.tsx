@@ -94,7 +94,9 @@ export function SecurityProvider({ children }: { children: ReactNode }) {
       details
     });
 
-    // Send to server for audit logging in production
+    // Disable server logging for now to prevent 405 errors
+    // TODO: Implement security events endpoint on backend
+    /*
     if (process.env.NODE_ENV === 'production') {
       fetch('/api/security-events', {
         method: 'POST',
@@ -108,6 +110,7 @@ export function SecurityProvider({ children }: { children: ReactNode }) {
         })
       }).catch(console.error);
     }
+    */
   };
 
   // Session timeout warning
