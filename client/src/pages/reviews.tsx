@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, MessageSquare, Filter, Plus } from "lucide-react";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from "@/hooks/use-language";
 import type { ActivityType } from "@shared/schema";
 
 export default function Reviews() {
@@ -58,7 +58,7 @@ export default function Reviews() {
                   {activity.name}
                 </h3>
                 <ActivityRating 
-                  activityId={activity.id} 
+                  activityId={activity.id || activity._id || ''} 
                   className="mb-3" 
                   showReviewCount={true}
                 />
@@ -122,7 +122,7 @@ export default function Reviews() {
                 
                 {selectedActivityForReview ? (
                   <ReviewForm
-                    activityId={selectedActivityForReview.id}
+                    activityId={selectedActivityForReview.id || selectedActivityForReview._id || ''}
                     activityName={selectedActivityForReview.name}
                     onSuccess={handleReviewSubmitted}
                   />

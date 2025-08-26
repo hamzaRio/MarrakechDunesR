@@ -6,7 +6,7 @@ import { z } from "zod";
 import { insertReviewSchema } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from "@/hooks/use-language";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -45,10 +45,7 @@ export default function ReviewForm({ activityId, activityName, bookingId, onSucc
 
   const createReviewMutation = useMutation({
     mutationFn: async (data: ReviewFormData) => {
-      return await apiRequest("/api/reviews", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      return await apiRequest("POST", "/api/reviews", data);
     },
     onSuccess: () => {
       toast({
