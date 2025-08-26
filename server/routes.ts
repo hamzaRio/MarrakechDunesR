@@ -61,9 +61,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Set Vary header for proper caching
     res.setHeader('Vary', 'Origin');
     
+    // Log CORS debugging info in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('CORS Debug:', {
+        origin,
+        clientUrls,
+        isMatch: origin && clientUrls.includes(origin)
+      });
+    }
+    
     if (origin && clientUrls.includes(origin)) {
       res.setHeader('Access-Control-Allow-Origin', origin);
       res.setHeader('Access-Control-Allow-Credentials', 'true');
+    } else if (process.env.NODE_ENV === 'development') {
+      // In development, allow all origins for easier debugging
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Credentials', 'false');
     } else {
       // Don't set credentials for non-matching origins
       res.setHeader('Access-Control-Allow-Credentials', 'false');

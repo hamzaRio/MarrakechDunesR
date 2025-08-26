@@ -159,7 +159,7 @@ export const securityHeaders = helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
       scriptSrc: ["'self'", "'unsafe-eval'"],
-      connectSrc: ["'self'"],
+      connectSrc: ["'self'", "https://marrakechdunesr.onrender.com", "https://*.vercel.app"],
       frameSrc: ["'none'"],
       objectSrc: ["'none'"],
       upgradeInsecureRequests: [],
