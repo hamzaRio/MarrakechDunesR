@@ -18,6 +18,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     
     steps:
     - name: Checkout code
@@ -28,9 +29,29 @@ jobs:
       with:
         node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+
+    - name: Configure npm
+      run: |
+        npm config set registry https://registry.npmjs.org/
+        npm config set fetch-retries 5
+        npm config set fetch-retry-mintimeout 20000
+        npm config set fetch-retry-maxtimeout 120000
 
     - name: Install dependencies
-      run: npm ci
+      run: |
+        npm ci --prefer-offline --no-audit
+      env:
+        NODE_OPTIONS: "--max-old-space-size=4096"
+
+    - name: Retry install if failed
+      if: failure()
+      run: |
+        echo "First install attempt failed, retrying with different strategy..."
+        npm cache clean --force
+        npm install --no-package-lock --prefer-offline --no-audit
+      env:
+        NODE_OPTIONS: "--max-old-space-size=4096"
 
     - name: Run type checking
       run: npm run check
