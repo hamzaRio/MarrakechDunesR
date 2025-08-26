@@ -594,7 +594,10 @@ export default function ActivityManagementModal({
       <DialogTrigger asChild>
         {trigger || getDefaultTrigger()}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white/98 backdrop-blur-sm border-2 border-moroccan-gold/30 shadow-xl">
+      <p id="management-desc" className="sr-only">
+        Manage activity details and settings
+      </p>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white/98 backdrop-blur-sm border-2 border-moroccan-gold/30 shadow-xl" aria-describedby="management-desc">
         {getDialogContent()}
       </DialogContent>
     </Dialog>

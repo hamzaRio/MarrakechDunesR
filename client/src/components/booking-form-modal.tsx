@@ -142,7 +142,10 @@ export default function BookingFormModal({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <p id="booking-desc" className="sr-only">
+        Create a new booking for activities and tours
+      </p>
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto" aria-describedby="booking-desc">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-moroccan-blue">
             <Calendar className="h-5 w-5" />

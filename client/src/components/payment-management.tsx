@@ -152,7 +152,10 @@ export default function PaymentManagement({ booking }: PaymentManagementProps) {
                 Update Payment
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <p id="payment-desc" className="sr-only">
+              Update payment status and details for this booking
+            </p>
+            <DialogContent className="max-w-md" aria-describedby="payment-desc">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <Banknote className="w-5 h-5" />
