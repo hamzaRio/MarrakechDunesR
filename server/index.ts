@@ -5,6 +5,10 @@ dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";
 import http from "http";
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import compression from 'compression';
+import morgan from 'morgan';
 import { registerRoutes } from "./routes";
 
 // Initialize application with MongoDB
@@ -13,8 +17,39 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const app = express();
+
+// Security headers with Helmet
+app.use(helmet({ 
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, 
+  contentSecurityPolicy: { 
+    useDefaults: true, 
+    directives: { 
+      "default-src": ["'self'", "https://marrakechdunes.vercel.app"], 
+      "img-src": ["'self'", "data:", "blob:", "https://marrakechdunesr.onrender.com"], 
+      "connect-src": ["'self'", "https://marrakechdunesr.onrender.com"], 
+      "script-src": ["'self'"], 
+      "style-src": ["'self'", "'unsafe-inline'"] 
+    }
+  }
+}));
+
+// Compression middleware
+app.use(compression());
+
+// Logging middleware
+app.use(morgan('combined'));
+
 // Configure trust proxy for rate limiting  
 app.set('trust proxy', 1);
+
+// Rate limiting for auth and admin routes
+const authLimiter = rateLimit({ 
+  windowMs: 15*60*1000, 
+  max: 300, 
+  standardHeaders: true, 
+  legacyHeaders: false 
+});
+app.use(['/api/auth', '/admin'], authLimiter);
 
 // CORS configuration - must come before other middleware
 const allowList = (process.env.CLIENT_URL || '')
@@ -47,14 +82,32 @@ app.get('/api/health', (_req, res) => {
   res.status(200).json({ ok: true, uptime: process.uptime() });
 });
 
-// Static mounts BEFORE routes - serve assets with 7-day cache
-app.use('/attached_assets',
-  express.static(path.join(process.cwd(), 'attached_assets'), { maxAge: '7d' })
-);
+// Static mounts with long-cache for images
+app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_assets'), {
+  immutable: true,
+  maxAge: '365d',
+  setHeaders: (res) => {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  }
+}));
+
 // Alias so frontend can always use /assets/<file>
-app.use('/assets',
-  express.static(path.join(process.cwd(), 'attached_assets'), { maxAge: '7d' })
-);
+app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets'), {
+  immutable: true,
+  maxAge: '365d',
+  setHeaders: (res) => {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+  }
+}));
+
+// No-cache headers for JSON endpoints
+app.use((_req, res, next) => {
+  res.setHeader('Surrogate-Control', 'no-store');
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
 
 app.use((req, res, next) => {
   const start = Date.now();

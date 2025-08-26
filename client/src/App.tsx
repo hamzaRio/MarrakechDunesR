@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SecurityProvider } from "@/hooks/use-security";
 import { LanguageProvider } from "@/hooks/use-language";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import Home from "@/pages/home";
 import Activities from "@/pages/activities";
 import Booking from "@/pages/booking-fixed";
@@ -72,20 +73,22 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <SecurityProvider>
-        <LanguageProvider>
-          <TooltipProvider>
-            <link
-              href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
-              rel="stylesheet"
-            />
-            <Toaster />
-            <Router />
-          </TooltipProvider>
-        </LanguageProvider>
-      </SecurityProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <SecurityProvider>
+          <LanguageProvider>
+            <TooltipProvider>
+              <link
+                href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+                rel="stylesheet"
+              />
+              <Toaster />
+              <Router />
+            </TooltipProvider>
+          </LanguageProvider>
+        </SecurityProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

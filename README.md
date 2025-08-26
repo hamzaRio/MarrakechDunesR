@@ -60,6 +60,44 @@ Copy `.env.example` to `.env` and configure:
   - **Important**: Must list only front-end origins, not the backend URL and not old preview domains
 - `PORT`: **On Render**: Remove any PORT env var. Render sets PORT automatically.
 
+## Security & Monitoring
+
+### Security Headers
+- **Helmet**: Comprehensive security headers including CSP, HSTS, and XSS protection
+- **Rate Limiting**: 300 requests per 15 minutes on `/api/auth/*` and `/admin/*` routes
+- **CORS**: Hardened to only allow `localhost:5173` and `marrakechdunes.vercel.app`
+
+### Content Security Policy (CSP)
+The CSP is configured to allow:
+- Frontend origin: `https://marrakechdunes.vercel.app`
+- Backend assets: `https://marrakechdunesr.onrender.com`
+- Inline styles for UI components
+
+**To adjust CSP if domains change**: Edit the `contentSecurityPolicy` directives in `server/index.ts`
+
+### Caching Strategy
+- **Images**: Long-cache (365 days) with immutable flag for `/attached_assets/*`
+- **JSON/API**: No-cache headers to ensure fresh data
+- **HTML**: Standard browser caching
+
+### Monitoring
+- **Health Check**: `/api/health` - Instant response (no DB dependency)
+- **Nightly Verification**: Automated checks run daily at 2:12 AM UTC
+- **Error Logging**: Unhandled rejections and exceptions are logged
+
+### Running Live Verification
+```bash
+# Run the verification script locally
+bash scripts/verify-live.sh
+
+# Or manually test endpoints
+curl -i https://marrakechdunes.vercel.app/
+curl -I https://marrakechdunesr.onrender.com/attached_assets/agafay-1.jpg
+curl -i -X OPTIONS https://marrakechdunesr.onrender.com/api/auth/user \
+  -H "Origin: https://marrakechdunes.vercel.app" \
+  -H "Access-Control-Request-Method: GET"
+```
+
 ## Admin Access
 
 **For Development:**
