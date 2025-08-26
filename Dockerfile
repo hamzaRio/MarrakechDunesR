@@ -6,10 +6,19 @@ WORKDIR /app
 COPY package*.json ./
 COPY client/package*.json ./client/
 COPY server/package*.json ./server/
-COPY shared/package.json* ./shared/
+COPY shared/package.json ./shared/
+
+# Configure npm for better reliability
+RUN npm config set registry https://registry.npmjs.org/ && \
+    npm config set fetch-retries 5 && \
+    npm config set fetch-retry-mintimeout 20000 && \
+    npm config set fetch-retry-maxtimeout 120000
 
 # Install all dependencies including dev dependencies
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps --prefer-offline --no-audit || \
+    (echo "First install attempt failed, retrying..." && \
+     npm cache clean --force && \
+     npm install --legacy-peer-deps --prefer-offline --no-audit)
 
 # Copy source code
 COPY . .
@@ -30,8 +39,17 @@ RUN apt-get update && apt-get install -y curl && \
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/server/package*.json ./server/
 
+# Configure npm for better reliability
+RUN npm config set registry https://registry.npmjs.org/ && \
+    npm config set fetch-retries 5 && \
+    npm config set fetch-retry-mintimeout 20000 && \
+    npm config set fetch-retry-maxtimeout 120000
+
 # Install only production dependencies
-RUN npm ci --omit=dev --legacy-peer-deps
+RUN npm ci --omit=dev --legacy-peer-deps --prefer-offline --no-audit || \
+    (echo "First install attempt failed, retrying..." && \
+     npm cache clean --force && \
+     npm ci --omit=dev --legacy-peer-deps --prefer-offline --no-audit)
 
 # Copy built artifacts
 COPY --from=build /app/server/dist ./server/dist
