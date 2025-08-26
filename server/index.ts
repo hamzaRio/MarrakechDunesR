@@ -233,6 +233,7 @@ app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_as
   maxAge: '365d',
   setHeaders: (res) => {
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   }
 }));
 
@@ -242,6 +243,7 @@ app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets'), {
   maxAge: '365d',
   setHeaders: (res) => {
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
   }
 }));
 
