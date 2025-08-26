@@ -118,14 +118,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Force CORP for assets if any proxy overrides it
-app.use((req, res, next) => {
-  if (req.path.startsWith('/attached_assets/') || req.path.startsWith('/assets/')) {
-    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  }
-  next();
-});
-
 // Compression middleware
 app.use(compression());
 
