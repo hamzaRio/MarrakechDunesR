@@ -24,35 +24,36 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
+    - name: Use Node.js 20
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ env.NODE_VERSION }}
+        node-version: '20'
         cache: 'npm'
-        cache-dependency-path: '**/package-lock.json'
+        registry-url: 'https://registry.npmjs.org/'
 
-    - name: Configure npm
+    # Ensure we are not forcing auth for public registry
+    - name: Ensure public npm registry and no auth
       run: |
-        npm config set registry https://registry.npmjs.org/
-        npm config set fetch-retries 2
-        npm config set fetch-retry-mintimeout 5000
-        npm config set fetch-retry-maxtimeout 30000
-        npm config set prefer-offline true
-        npm config set progress false
+        echo "registry=https://registry.npmjs.org/" > .npmrc
+        npm config set always-auth false
+        npm config set fetch-retry-maxtimeout 120000
+        npm config set fetch-timeout 120000
+        npm cache verify || true
 
-    - name: Install dependencies
+    # Clean slate
+    - name: Remove per-package .npmrc files if any
       run: |
-        npm ci --prefer-offline --no-audit --no-fund
-      env:
-        NODE_OPTIONS: "--max-old-space-size=4096"
-      timeout-minutes: 5
+        find . -name ".npmrc" -not -path "./.npmrc" -print -delete || true
 
-    - name: Retry install if failed
-      if: failure()
+    - name: Install dependencies (workspace root)
       run: |
-        echo "First install attempt failed, retrying with different strategy..."
-        npm cache clean --force
-        npm install --no-package-lock --prefer-offline --no-audit --no-fund
+        # prefer ci; fall back to install if lock isn't in sync
+        if npm ci --ignore-scripts --no-audit --no-fund; then
+          echo "npm ci succeeded"
+        else
+          echo "npm ci failed; falling back to npm install"
+          npm install --ignore-scripts --no-audit --no-fund
+        fi
       env:
         NODE_OPTIONS: "--max-old-space-size=4096"
       timeout-minutes: 5
@@ -63,8 +64,11 @@ jobs:
     - name: Run tests (if available)
       run: npm test --if-present
 
-    - name: Build application
-      run: npm run build
+    - name: Build client
+      run: npm -w client run build
+
+    - name: Build server
+      run: npm -w server run build
 
   # Build and Push Docker Image
   build:
@@ -241,14 +245,33 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
+    - name: Use Node.js 20
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ env.NODE_VERSION }}
+        node-version: '20'
         cache: 'npm'
+        registry-url: 'https://registry.npmjs.org/'
 
-    - name: Install dependencies
-      run: npm ci
+    - name: Ensure public npm registry and no auth
+      run: |
+        echo "registry=https://registry.npmjs.org/" > .npmrc
+        npm config set always-auth false
+        npm config set fetch-retry-maxtimeout 120000
+        npm config set fetch-timeout 120000
+        npm cache verify || true
+
+    - name: Remove per-package .npmrc files if any
+      run: |
+        find . -name ".npmrc" -not -path "./.npmrc" -print -delete || true
+
+    - name: Install dependencies (workspace root)
+      run: |
+        if npm ci --ignore-scripts --no-audit --no-fund; then
+          echo "npm ci succeeded"
+        else
+          echo "npm ci failed; falling back to npm install"
+          npm install --ignore-scripts --no-audit --no-fund
+        fi
 
     - name: Run Lighthouse CI
       uses: treosh/lighthouse-ci-action@v10
