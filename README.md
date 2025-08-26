@@ -59,6 +59,7 @@ Copy `.env.example` to `.env` and configure:
 - `CLIENT_URL`: Comma-separated list of frontend URLs for CORS (e.g., `http://localhost:5173,https://marrakechdunes.vercel.app`)
   - **Important**: Must list only front-end origins, not the backend URL and not old preview domains
 - `PORT`: **On Render**: Remove any PORT env var. Render sets PORT automatically.
+- `LOG_LEVEL`: Logging level (optional, default: info) - debug, info, warn, error
 
 ## Security & Monitoring
 
@@ -97,6 +98,61 @@ curl -i -X OPTIONS https://marrakechdunesr.onrender.com/api/auth/user \
   -H "Origin: https://marrakechdunes.vercel.app" \
   -H "Access-Control-Request-Method: GET"
 ```
+
+## Operations
+
+### Live Verification
+The `scripts/verify-live.sh` script performs end-to-end health checks:
+- Frontend routes (/, /activities, /booking, /admin/login)
+- Backend health endpoint
+- CORS preflight validation
+- Asset serving verification
+
+### CSP Reports
+CSP violations are collected via report-only policy and logged to `/api/csp-report`:
+- Reports are rate-limited to 60/minute per IP
+- Logged as JSON with `level=warn, type=csp`
+- No authentication required
+- Never crashes on malformed payloads
+
+**To monitor CSP violations:**
+```bash
+# Tail logs for CSP violations
+tail -f logs/app.log | grep '"type":"csp"'
+
+# Or check server logs in production
+# CSP reports appear as warning-level JSON logs
+```
+
+### API Response Codes
+- **401 Unauthorized**: `{ "error": "unauthorized" }` - Expected when not logged in
+- **429 Rate Limited**: `{ "error": "rate_limited", "retryAfterSec": <n> }` - Too many requests
+- **500 Internal Error**: `{ "message": "Internal Server Error" }` - Server error
+
+## Monitoring
+
+### E2E Testing
+- **Workflow**: [E2E Production Tests](.github/workflows/e2e-prod.yml)
+- **Schedule**: Daily at 3:07 AM UTC
+- **Manual Trigger**: Available via GitHub Actions UI
+- **Scope**: Production smoke tests only (read-only)
+
+**To re-run E2E tests:**
+1. Go to GitHub Actions → "E2E Production Tests"
+2. Click "Run workflow" → "Run workflow"
+3. Tests run against live production endpoints
+
+### Logging
+- **Format**: JSON structured logging via Winston
+- **Level**: Configurable via `LOG_LEVEL` env var (default: info)
+- **PII Protection**: Authorization headers and cookies are redacted
+- **CSP Reports**: Warning-level logs for policy violations
+
+### Health Checks
+- **Endpoint**: `GET /api/health`
+- **Response**: `{ "ok": true, "uptime": <seconds> }`
+- **Performance**: < 200ms response time
+- **Dependencies**: No database dependency (instant response)
 
 ## Admin Access
 
@@ -154,6 +210,7 @@ The project includes deployment configurations for:
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run check` - Type checking
+- `npm run test:e2e` - Run E2E smoke tests against production
 
 ## Security
 

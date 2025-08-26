@@ -66,6 +66,12 @@ jobs:
     - name: Build server
       run: npm -w server run build
 
+    - name: Run E2E tests (main branch only)
+      if: github.ref == 'refs/heads/main'
+      run: |
+        npx playwright install --with-deps chromium
+        npm run test:e2e
+
   # Build and Push Docker Image
   build:
     name: Build and Push Docker Image
