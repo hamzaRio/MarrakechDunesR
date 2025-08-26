@@ -70,6 +70,12 @@ jobs:
       if: github.ref == 'refs/heads/main'
       run: |
         npx playwright install --with-deps chromium
+        # Warm up backend to avoid 502s
+        for i in {1..12}; do
+          code=$(curl -s -o /dev/null -w "%{http_code}" "https://marrakechdunesr.onrender.com/api/health" || true)
+          [ "$code" = "200" ] && break
+          sleep 5
+        done
         npm run test:e2e
 
   # Build and Push Docker Image

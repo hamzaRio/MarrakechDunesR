@@ -39,35 +39,18 @@ if (process.env.NODE_ENV === 'development') {
 const app = express();
 
 // Security headers with Helmet (enforced CSP)
-app.use(helmet({ 
-  crossOriginEmbedderPolicy: false,          // allow cross-origin <img> etc.
-  crossOriginResourcePolicy: { policy: 'cross-origin' }, // explicitly allow images from Render
-  contentSecurityPolicy: { 
-    useDefaults: true, 
-    directives: { 
-      "default-src": ["'self'", "https://marrakechdunes.vercel.app", "https://*.vercel.app"], 
-      "img-src": [
-        "'self'", 
-        "data:", 
-        "blob:", 
-        "https://marrakechdunesr.onrender.com",
-        "https://maps.googleapis.com",
-        "https://maps.gstatic.com"
-      ], 
-      "script-src": [
-        "'self'",
-        "'unsafe-inline'",
-        "https://maps.googleapis.com",
-        "https://maps.gstatic.com"
-      ], 
-      "style-src": ["'self'", "'unsafe-inline'"], 
-      "connect-src": [
-        "'self'", 
-        "https://marrakechdunesr.onrender.com",
-        "https://maps.googleapis.com",
-        "https://maps.gstatic.com"
-      ],
-      "frame-src": ["'self'", "https://www.google.com"]
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  crossOriginEmbedderPolicy: false, // avoid COEP surprises
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      "default-src": ["'self'", "https://marrakechdunes.vercel.app"],
+      "img-src": ["'self'", "data:", "blob:", "https://marrakechdunesr.onrender.com", "https://maps.googleapis.com", "https://maps.gstatic.com"],
+      "connect-src": ["'self'", "https://marrakechdunesr.onrender.com", "https://maps.googleapis.com", "https://maps.gstatic.com"],
+      "script-src": ["'self'", "https://maps.googleapis.com", "https://maps.gstatic.com"],
+      "style-src": ["'self'", "'unsafe-inline'"],
+      "frame-src": ["https://www.google.com"]
     }
   }
 }));
@@ -157,22 +140,22 @@ const cspReportLimiter = rateLimit({
 });
 
 // CORS configuration - must come before other middleware
-const allowed = new Set([
-  'http://localhost:5173',
-  'https://marrakechdunes.vercel.app'
-]);
-
-const isVercelPreview = (origin?: string) =>
-  !!origin && /^https:\/\/marrakechdunes-[a-z0-9-]+\.vercel\.app$/.test(origin);
+const prodOrigin = 'https://marrakechdunes.vercel.app';
+const previewRE = /^https:\/\/marrakechdunes-[a-z0-9-]+\.vercel\.app$/;
+const allowed = new Set(['http://localhost:5173', prodOrigin]);
 
 app.use(cors({
   origin: (origin, cb) => {
-    if (!origin) return cb(null, true);
-    if (allowed.has(origin) || isVercelPreview(origin)) return cb(null, true);
+    if (!origin) return cb(null, true); // curl/health/etc.
+    if (allowed.has(origin) || previewRE.test(origin)) return cb(null, true);
     return cb(new Error('Not allowed by CORS'));
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
+  optionsSuccessStatus: 204
 }));
+app.use((req, res, next) => { res.setHeader('Vary','Origin'); next(); });
 
 logger.info('CORS configured', { 
   allowedOrigins: Array.from(allowed),
