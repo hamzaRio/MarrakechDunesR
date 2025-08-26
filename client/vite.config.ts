@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => {
   Object.assign(process.env, { ...rootEnv, ...clientEnv });
   
   return {
+    base: '/',
     plugins: [
       react(),
       {
