@@ -4,6 +4,7 @@ dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";
+import http from "http";
 import { registerRoutes } from "./routes";
 
 // Initialize application with MongoDB
@@ -40,6 +41,11 @@ console.log('[CORS] Allowed origins:', origins);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Health should be instant and not depend on DB
+app.get('/api/health', (_req, res) => {
+  res.status(200).json({ ok: true, uptime: process.uptime() });
+});
 
 // Static mounts BEFORE routes - serve assets with 7-day cache
 app.use('/attached_assets',
@@ -83,9 +89,6 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  // Remove duplicate health endpoint - it's already defined in routes.ts with database check
-  // app.get("/api/health", (_req, res) => res.status(200).json({ ok: true }));
-
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
@@ -116,14 +119,23 @@ app.use((req, res, next) => {
     });
   }
 
-  // Use PORT from environment or default to 5000
-  // this serves both the API and the client.
-  const port = parseInt(process.env.PORT || '5000');
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    console.log(`serving on port ${port}`);
+  const port = Number(process.env.PORT) || 5000;
+  const httpServer = http.createServer(app);
+
+  // Harden timeouts for Render
+  httpServer.keepAliveTimeout = 65_000;  // > 60s
+  httpServer.headersTimeout = 66_000;  // keepAliveTimeout + 1s
+  httpServer.requestTimeout = 60_000;
+
+  httpServer.listen(port, '0.0.0.0', () => {
+    console.log(`[server] listening on ${port} (NODE_ENV=${process.env.NODE_ENV})`);
+  });
+
+  // Global error handlers to avoid silent crashes
+  process.on('unhandledRejection', (reason) => {
+    console.error('[unhandledRejection]', reason);
+  });
+  process.on('uncaughtException', (err) => {
+    console.error('[uncaughtException]', err);
   });
 })();
