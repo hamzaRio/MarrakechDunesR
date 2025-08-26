@@ -15,7 +15,7 @@ import {
 export default function Navbar() {
   const [location] = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const { language, changeLanguage, t } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const { user } = useAuth();
 
   const navItems = [
@@ -67,10 +67,10 @@ export default function Navbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => changeLanguage("en")}>
+                <DropdownMenuItem onClick={() => setLanguage("en")}>
                   English
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => changeLanguage("fr")}>
+                <DropdownMenuItem onClick={() => setLanguage("fr")}>
                   Français
                 </DropdownMenuItem>
               </DropdownMenuContent>

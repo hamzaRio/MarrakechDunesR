@@ -161,7 +161,7 @@ export default function BookingFixed() {
 
   const watchedActivityId = form.watch("activityId");
   const watchedActivity = activities.find(a => a.id === watchedActivityId || a._id === watchedActivityId);
-  const totalAmount = watchedActivity ? parseInt(watchedActivity.price) * form.watch("numberOfPeople") : 0;
+  const totalAmount = watchedActivity ? (parseFloat(watchedActivity.price) || 0) * form.watch("numberOfPeople") : 0;
 
   // Handle activity selection
   const handleActivitySelect = (activityId: string) => {

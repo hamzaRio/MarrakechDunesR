@@ -87,7 +87,7 @@ export default function PaymentManagement({ booking }: PaymentManagementProps) {
     }
 
     updatePaymentMutation.mutate({
-      bookingId: booking.id,
+      bookingId: booking.id || booking._id || '',
       paymentStatus: newPaymentStatus,
       paidAmount: newPaidAmount,
       paymentMethod: paymentType === 'deposit' ? 'cash_deposit' : 'cash',

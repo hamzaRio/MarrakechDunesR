@@ -486,12 +486,14 @@ export default function ActivityManagementModal({
                               if (result.successful && result.successful.length > 0) {
                                 const uploadedFile = result.successful[0];
                                 const imageUrl = uploadedFile.uploadURL;
-                                setUploadedImageUrl(imageUrl);
-                                field.onChange(imageUrl);
-                                toast({
-                                  title: "Image Uploaded",
-                                  description: "Activity image has been uploaded successfully.",
-                                });
+                                if (imageUrl) {
+                                  setUploadedImageUrl(imageUrl);
+                                  field.onChange(imageUrl);
+                                  toast({
+                                    title: "Image Uploaded",
+                                    description: "Activity image has been uploaded successfully.",
+                                  });
+                                }
                               }
                             }}
                             buttonClassName="w-full"
