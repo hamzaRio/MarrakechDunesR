@@ -58,6 +58,7 @@ Copy `.env.example` to `.env` and configure:
 - `ADMIN_PASSWORD` / `SUPERADMIN_PASSWORD`: Admin user passwords
 - `CLIENT_URL`: Comma-separated list of frontend URLs for CORS (e.g., `http://localhost:5173,https://marrakechdunes.vercel.app`)
   - **Important**: Must list only front-end origins, not the backend URL and not old preview domains
+- `PORT`: **On Render**: Remove any PORT env var. Render sets PORT automatically.
 
 ## Admin Access
 
