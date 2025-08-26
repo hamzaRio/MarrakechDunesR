@@ -1,13 +1,24 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import { copy } from 'fs-extra';
 
 export default defineConfig(({ mode }) => {
   const rootEnv = loadEnv(mode, path.resolve(__dirname, ".."), "");
   Object.assign(process.env, rootEnv);
   
   return {
-    plugins: [react()],
+    plugins: [
+      react(),
+      {
+        name: 'copy-assets',
+        writeBundle() {
+          // Copy assets to dist folder for production
+          copy(path.resolve(__dirname, '../attached_assets'), path.resolve(__dirname, 'dist/attached_assets'))
+            .catch(err => console.error('Error copying assets:', err));
+        },
+      },
+    ],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
