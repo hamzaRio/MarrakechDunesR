@@ -35,6 +35,10 @@ const bookingFormSchema = z.object({
 
 type BookingFormData = z.infer<typeof bookingFormSchema>;
 
+type BookingFormDataWithFieldArray = Omit<BookingFormData, 'participantNames'> & {
+  participantNames: { id: string; value: string }[];
+};
+
 export default function BookingFixed() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -50,7 +54,7 @@ export default function BookingFixed() {
     queryKey: ["/api/activities"],
   });
 
-  const form = useForm<BookingFormData>({
+  const form = useForm<BookingFormDataWithFieldArray>({
     resolver: zodResolver(bookingFormSchema),
     defaultValues: {
       customerName: "",
@@ -59,7 +63,7 @@ export default function BookingFixed() {
       activityId: "",
       numberOfPeople: 1,
       preferredDate: "",
-      participantNames: [""],
+      participantNames: [{ id: "0", value: "" }],
       notes: "",
     },
   });
@@ -106,19 +110,27 @@ export default function BookingFixed() {
     }
   }, [activities.length]);
 
-  const { fields, replace } = useFieldArray({
+  const { fields, append, remove } = useFieldArray<BookingFormDataWithFieldArray>({
     control: form.control,
     name: "participantNames",
   });
 
   const numberOfPeople = form.watch("numberOfPeople");
   useEffect(() => {
-    const names = Array.from({ length: numberOfPeople }, (_, i) => {
-      const currentValue = form.getValues(`participantNames.${i}`);
-      return currentValue || "";
-    });
-    replace(names as any);
-  }, [numberOfPeople, replace, form]);
+    const currentLength = fields.length;
+    
+    if (numberOfPeople > currentLength) {
+      // Add more fields
+      for (let i = currentLength; i < numberOfPeople; i++) {
+        append({ id: `${i}`, value: "" });
+      }
+    } else if (numberOfPeople < currentLength) {
+      // Remove excess fields
+      for (let i = currentLength - 1; i >= numberOfPeople; i--) {
+        remove(i);
+      }
+    }
+  }, [numberOfPeople, append, remove, fields.length]);
 
   const createBookingMutation = useMutation({
     mutationFn: async (data: BookingFormData) => {
@@ -143,8 +155,13 @@ export default function BookingFixed() {
     },
   });
 
-  const onSubmit = (data: BookingFormData) => {
-    setPendingBookingData(data);
+  const onSubmit = (data: BookingFormDataWithFieldArray) => {
+    // Transform the data back to the expected format
+    const transformedData: BookingFormData = {
+      ...data,
+      participantNames: data.participantNames.map(name => name.value)
+    };
+    setPendingBookingData(transformedData);
     setShowPaymentConfirmation(true);
   };
 
@@ -492,7 +509,7 @@ export default function BookingFixed() {
                               <FormField
                                 key={field.id}
                                 control={form.control}
-                                name={`participantNames.${index}`}
+                                name={`participantNames.${index}.value`}
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel>Full Name of Person {index + 1} *</FormLabel>
@@ -580,7 +597,7 @@ export default function BookingFixed() {
                                 }
                                 
                                 // Check if all participant names are filled and valid
-                                const emptyNames = participantNames.filter(name => !name || name.length < 2);
+                                const emptyNames = participantNames.filter(name => !name.value || name.value.length < 2);
                                 if (emptyNames.length > 0) {
                                   toast({
                                     title: "Participant Names Required",
@@ -590,7 +607,7 @@ export default function BookingFixed() {
                                   return;
                                 }
                                 
-                                const invalidNames = participantNames.filter(name => !/^[a-zA-ZÀ-ÿ\s'-]+$/.test(name));
+                                const invalidNames = participantNames.filter(name => !/^[a-zA-ZÀ-ÿ\s'-]+$/.test(name.value));
                                 if (invalidNames.length > 0) {
                                   toast({
                                     title: "Invalid Name Format",
@@ -646,7 +663,7 @@ export default function BookingFixed() {
                                 <span className="font-medium">Participants:</span>
                                 <div className="text-right">
                                   {form.watch("participantNames").map((name, i) => (
-                                    <div key={i}>{name}</div>
+                                    <div key={i}>{name.value}</div>
                                   ))}
                                 </div>
                               </div>
