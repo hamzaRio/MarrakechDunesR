@@ -1,0 +1,123 @@
+# Deployment Configuration for MarrakechDunes
+# This file defines environment-specific settings for CI/CD
+
+environments:
+  test:
+    name: "Test Environment"
+    description: "Staging environment for testing new features"
+    branch: "develop"
+    auto_deploy: true
+    required_reviewers: 1
+    
+    # Backend Configuration (Render)
+    backend:
+      service_name: "marrakech-dunes-test"
+      environment_variables:
+        NODE_ENV: "test"
+        MONGODB_URI: "${MONGODB_TEST_URI}"
+        SESSION_SECRET: "${SESSION_SECRET}"
+        SUPERADMIN_PASSWORD: "${SUPERADMIN_PASSWORD}"
+        ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+        CLIENT_URL: "https://marrakech-dunes-test.vercel.app,http://localhost:5173"
+        WHATSAPP_RECEIVERS: "${WHATSAPP_RECEIVERS}"
+        PORT: "5000"
+    
+    # Frontend Configuration (Vercel)
+    frontend:
+      project_name: "marrakech-dunes-test"
+      environment_variables:
+        VITE_API_URL: "https://marrakech-dunes-test.onrender.com"
+        VITE_ENVIRONMENT: "test"
+    
+    # Monitoring
+    monitoring:
+      health_check_url: "https://marrakech-dunes-test.onrender.com/api/health"
+      performance_threshold: 3000  # 3 seconds
+      error_rate_threshold: 5      # 5%
+
+  production:
+    name: "Production Environment"
+    description: "Live production environment"
+    branch: "main"
+    auto_deploy: false
+    required_reviewers: 2
+    protection_rules:
+      - require_pull_request_reviews: true
+      - required_approving_review_count: 2
+      - dismiss_stale_reviews: true
+      - require_code_owner_reviews: true
+    
+    # Backend Configuration (Render)
+    backend:
+      service_name: "marrakech-dunes-backend"
+      environment_variables:
+        NODE_ENV: "production"
+        MONGODB_URI: "${MONGODB_PROD_URI}"
+        SESSION_SECRET: "${SESSION_SECRET}"
+        SUPERADMIN_PASSWORD: "${SUPERADMIN_PASSWORD}"
+        ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+        CLIENT_URL: "https://marrakech-dunes.vercel.app,http://localhost:5173"
+        WHATSAPP_RECEIVERS: "${WHATSAPP_RECEIVERS}"
+        PORT: "5000"
+    
+    # Frontend Configuration (Vercel)
+    frontend:
+      project_name: "marrakech-dunes"
+      environment_variables:
+        VITE_API_URL: "https://marrakechdunes.onrender.com"
+        VITE_ENVIRONMENT: "production"
+    
+    # Monitoring
+    monitoring:
+      health_check_url: "https://marrakechdunes.onrender.com/api/health"
+      performance_threshold: 2000  # 2 seconds
+      error_rate_threshold: 1      # 1%
+
+# Global Configuration
+global:
+  docker:
+    registry: "ghcr.io"
+    image_name: "marrakech-dunes"
+    build_context: "."
+    dockerfile: "Dockerfile"
+  
+  notifications:
+    slack_webhook: "${SLACK_WEBHOOK_URL}"
+    email_recipients: "${DEPLOYMENT_EMAILS}"
+  
+  rollback:
+    enabled: true
+    max_rollback_attempts: 3
+    rollback_window_minutes: 30
+  
+  security:
+    scan_dependencies: true
+    scan_container: true
+    scan_code: true
+    fail_on_high_severity: true
+  
+  performance:
+    lighthouse_enabled: true
+    lighthouse_thresholds:
+      performance: 80
+      accessibility: 90
+      best_practices: 80
+      seo: 90
+
+# Required Secrets
+required_secrets:
+  - MONGODB_TEST_URI
+  - MONGODB_PROD_URI
+  - SESSION_SECRET
+  - SUPERADMIN_PASSWORD
+  - ADMIN_PASSWORD
+  - WHATSAPP_RECEIVERS
+  - RENDER_API_KEY
+  - RENDER_TEST_SERVICE_ID
+  - RENDER_PROD_SERVICE_ID
+  - VERCEL_TOKEN
+  - VERCEL_ORG_ID
+  - VERCEL_TEST_PROJECT_ID
+  - VERCEL_PROD_PROJECT_ID
+  - SLACK_WEBHOOK_URL
+  - DEPLOYMENT_EMAILS

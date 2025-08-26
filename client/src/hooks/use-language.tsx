@@ -13,13 +13,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>(() => {
     // Detect browser language or use saved preference
     const saved = localStorage.getItem('marrakech-language') as Language;
-    if (saved && ['en', 'fr', 'ar'].includes(saved)) {
+    if (saved && ['en', 'fr'].includes(saved)) {
       return saved;
     }
     
     const browserLang = navigator.language.toLowerCase();
     if (browserLang.startsWith('fr')) return 'fr';
-    if (browserLang.startsWith('ar')) return 'ar';
     return 'en';
   });
 
@@ -28,11 +27,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('marrakech-language', lang);
     
     // Set document direction and language
-    if (lang === 'ar') {
-      document.dir = 'rtl';
-    } else {
-      document.dir = 'ltr';
-    }
+    document.dir = 'ltr';
     document.documentElement.lang = lang;
   };
 

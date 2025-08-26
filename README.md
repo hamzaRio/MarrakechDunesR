@@ -6,10 +6,11 @@ A full-stack web application for booking authentic Moroccan desert adventures an
 
 - **Customer Experience**: Browse activities, book experiences, receive WhatsApp confirmations
 - **Admin Dashboard**: Manage bookings, activities, payments, and performance analytics
-- **Bilingual Support**: Arabic and French language support
+- **Bilingual Support**: English and French language support
 - **WhatsApp Integration**: Automated notifications to admins and customers
 - **Responsive Design**: Mobile-first approach with Moroccan-themed UI
 - **Payment Management**: Cash payment tracking with deposit support
+- **CI/CD Pipeline**: Automated testing, building, and deployment to test and production environments
 
 ## Tech Stack
 
@@ -18,6 +19,7 @@ A full-stack web application for booking authentic Moroccan desert adventures an
 - **State Management**: TanStack Query
 - **Build Tools**: Vite, ESBuild
 - **Deployment**: Docker, Vercel, Render support
+- **CI/CD**: GitHub Actions with automated testing and deployment
 
 ## Quick Start
 
@@ -68,12 +70,31 @@ Copy `.env.example` to `.env` and configure:
 - Use strong, unique passwords
 - Enable two-factor authentication if available
 
+## CI/CD Pipeline
+
+This project includes a comprehensive CI/CD pipeline with:
+
+### Environments
+- **Test Environment**: Automatic deployment from `develop` branch
+- **Production Environment**: Manual deployment from `main` branch
+
+### Features
+- Automated testing and type checking
+- Security scanning with Trivy
+- Performance testing with Lighthouse CI
+- Docker image building and deployment
+- Automatic rollback capabilities
+
+### Setup
+See [CI-CD-README.md](./CI-CD-README.md) for detailed setup instructions.
+
 ## Deployment
 
 The project includes deployment configurations for:
 - **Docker**: `Dockerfile` and `.dockerignore`
 - **Vercel**: `vercel.json` (frontend)
 - **Render**: `render.yaml` (backend)
+- **GitHub Actions**: Automated CI/CD workflows
 
 ## Project Structure
 
@@ -82,7 +103,9 @@ The project includes deployment configurations for:
 ├── server/          # Express backend
 ├── shared/          # Shared TypeScript types
 ├── attached_assets/ # Static assets (images)
-└── deploy configs   # Docker, Vercel, Render configs
+├── .github/         # GitHub Actions workflows
+├── deploy configs   # Docker, Vercel, Render configs
+└── CI-CD-README.md  # CI/CD documentation
 ```
 
 ## Scripts
@@ -90,6 +113,7 @@ The project includes deployment configurations for:
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run start` - Start production server
+- `npm run check` - Type checking
 
 ## Security
 
@@ -98,14 +122,24 @@ The project includes deployment configurations for:
 - CSRF protection with secure sessions
 - Input sanitization and validation
 - Secure MongoDB connection handling
+- Automated security scanning in CI/CD
 
 ## Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
+2. Create a feature branch from `develop`
+3. Make your changes
+4. Run tests: `npm test`
+5. Create a Pull Request to `develop`
+6. Ensure all CI checks pass
+7. Get code review approval
+
+## Recent Changes
+
+- **Removed Arabic language support** - Simplified to English and French only
+- **Added comprehensive CI/CD pipeline** - Automated testing, building, and deployment
+- **Enhanced security** - Automated vulnerability scanning
+- **Improved deployment process** - Separate test and production environments
 
 ## License
 

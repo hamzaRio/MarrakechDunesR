@@ -394,7 +394,7 @@ export default function WhatsAppBot() {
                 <li>• Average response time: 45 seconds</li>
                 <li>• 34% conversion rate from WhatsApp to booking</li>
                 <li>• 92% customer satisfaction rating</li>
-                <li>• Support for English, French, and Arabic</li>
+                <li>• Support for English and French</li>
               </ul>
             </div>
             <div className="space-y-3">
