@@ -218,6 +218,8 @@ const createSessionStore = () => {
 };
 
 // Session security configuration
+const isProd = process.env.NODE_ENV === 'production';
+
 export const sessionSecurity = {
   name: 'marrakech.session',
   secret: process.env.SESSION_SECRET || (() => {
@@ -228,9 +230,9 @@ export const sessionSecurity = {
   saveUninitialized: false,
   store: createSessionStore(),
   cookie: {
-    secure: true,
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000,
-    sameSite: 'none' as const
+    secure: isProd,            // true on Render
+    sameSite: isProd ? 'none' as const : 'lax' as const,
+    maxAge: 1000 * 60 * 60 * 24 * 7
   }
 };

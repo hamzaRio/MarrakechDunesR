@@ -11,6 +11,7 @@ import compression from 'compression';
 import morgan from 'morgan';
 import winston from 'winston';
 import { registerRoutes } from "./routes";
+import { corsOrigin, allowedOriginsList } from "./src/utils/getAllowedOrigins";
 
 // Initialize JSON logger
 const logger = winston.createLogger({
@@ -40,52 +41,19 @@ const app = express();
 
 // Security headers with Helmet (enforced CSP)
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: 'cross-origin' },
-  crossOriginEmbedderPolicy: false, // avoid COEP surprises
   contentSecurityPolicy: {
     useDefaults: true,
     directives: {
-      "default-src": ["'self'", "https://marrakechdunes.vercel.app"],
-      "img-src": ["'self'", "data:", "blob:", "https://marrakechdunesr.onrender.com", "https://maps.googleapis.com", "https://maps.gstatic.com"],
-      "connect-src": ["'self'", "https://marrakechdunesr.onrender.com", "https://maps.googleapis.com", "https://maps.gstatic.com"],
-      "script-src": ["'self'", "https://maps.googleapis.com", "https://maps.gstatic.com"],
-      "style-src": ["'self'", "'unsafe-inline'"],
-      "frame-src": ["https://www.google.com"]
+      "default-src": ["'self'"],
+      "connect-src": ["'self'", ...allowedOriginsList],
+      "img-src": ["'self'", "data:", "blob:", "https://images.unsplash.com", "https://maps.gstatic.com", "https://maps.googleapis.com", "https://lh3.googleusercontent.com"],
+      "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      "font-src": ["'self'", "https://fonts.gstatic.com"],
+      "script-src": ["'self'", "'unsafe-inline'", "https://maps.googleapis.com", "https://maps.gstatic.com"],
+      "frame-src": ["'self'", "https://www.google.com"]
     }
-  }
-}));
-
-// CSP Report-Only policy for monitoring violations
-app.use(helmet({
-  contentSecurityPolicy: {
-    reportOnly: true,
-    directives: {
-      "default-src": ["'self'", "https://marrakechdunes.vercel.app", "https://*.vercel.app"],
-      "img-src": [
-        "'self'", 
-        "data:", 
-        "blob:", 
-        "https://marrakechdunesr.onrender.com",
-        "https://maps.googleapis.com",
-        "https://maps.gstatic.com"
-      ],
-      "script-src": [
-        "'self'",
-        "'unsafe-inline'",
-        "https://maps.googleapis.com",
-        "https://maps.gstatic.com"
-      ],
-      "style-src": ["'self'", "'unsafe-inline'"],
-      "connect-src": [
-        "'self'", 
-        "https://marrakechdunesr.onrender.com",
-        "https://maps.googleapis.com",
-        "https://maps.gstatic.com"
-      ],
-      "frame-src": ["'self'", "https://www.google.com"],
-      "report-to": "csp-endpoint"
-    }
-  }
+  },
+  // keep other helmet defaults as-is
 }));
 
 // Report-To header for CSP violations
@@ -139,32 +107,22 @@ const cspReportLimiter = rateLimit({
   }
 });
 
-// CORS configuration - only for API routes, not static assets
-const prodOrigin = 'https://marrakechdunes.vercel.app';
-const previewRE = /^https:\/\/marrakechdunes-[a-z0-9-]+\.vercel\.app$/;
-const allowed = new Set(['http://localhost:5173', prodOrigin]);
-
-// Apply CORS only to API routes, not static assets
-app.use('/api', cors({
-  origin: (origin, cb) => {
-    if (!origin) return cb(null, true); // curl/health/etc.
-    if (allowed.has(origin) || previewRE.test(origin)) return cb(null, true);
-    return cb(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
-  optionsSuccessStatus: 204
+// CORS configuration using utility
+app.use(cors({ 
+  origin: corsOrigin, 
+  credentials: true, 
+  methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'], 
+  allowedHeaders: ['Content-Type','Authorization','X-Requested-With'] 
 }));
 
-// Add Vary: Origin header for API routes
-app.use('/api', (req, res, next) => { 
-  res.setHeader('Vary','Origin'); 
-  next(); 
-});
+// Explicit OPTIONS handler for all routes
+app.options('*', cors({ 
+  origin: corsOrigin, 
+  credentials: true 
+}));
 
 logger.info('CORS configured', { 
-  allowedOrigins: Array.from(allowed),
+  allowedOrigins: allowedOriginsList,
   previewPattern: 'https://marrakechdunes-*.vercel.app'
 });
 
@@ -208,24 +166,18 @@ app.get('/api/diag', async (req, res) => {
   });
 });
 
-// Static mounts with long-cache for images
-app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_assets'), {
-  immutable: true,
-  maxAge: '365d',
-  setHeaders: (res) => {
-    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  }
+// Static assets with CORS and long cache
+app.use('/attached_assets', cors({ origin: corsOrigin, credentials: false }));
+app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_assets'), { 
+  maxAge: '1y', 
+  immutable: true 
 }));
 
 // Alias so frontend can always use /assets/<file>
-app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets'), {
-  immutable: true,
-  maxAge: '365d',
-  setHeaders: (res) => {
-    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  }
+app.use('/assets', cors({ origin: corsOrigin, credentials: false }));
+app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets'), { 
+  maxAge: '1y', 
+  immutable: true 
 }));
 
 // No-cache headers for API JSON responses only

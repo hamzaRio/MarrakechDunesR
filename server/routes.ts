@@ -52,44 +52,6 @@ const requireSuperAdmin = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // CORS configuration - read CLIENT_URL from environment
-  const clientUrls = (process.env.CLIENT_URL || 'http://localhost:5173').split(',').map(url => url.trim());
-  
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    const origin = req.headers.origin;
-    
-    // Set Vary header for proper caching
-    res.setHeader('Vary', 'Origin');
-    
-    // Log CORS debugging info in development
-    if (process.env.NODE_ENV === 'development') {
-      console.log('CORS Debug:', {
-        origin,
-        clientUrls,
-        isMatch: origin && clientUrls.includes(origin)
-      });
-    }
-    
-    if (origin && clientUrls.includes(origin)) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
-    } else if (process.env.NODE_ENV === 'development') {
-      // In development, allow all origins for easier debugging
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Credentials', 'false');
-    } else {
-      // Don't set credentials for non-matching origins
-      res.setHeader('Access-Control-Allow-Credentials', 'false');
-    }
-    
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    
-    if (req.method === 'OPTIONS') {
-      return res.sendStatus(200);
-    }
-    next();
-  });
 
   // Health check endpoint for deployment monitoring
   app.get('/api/health', async (req: Request, res: Response) => {
