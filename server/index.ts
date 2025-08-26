@@ -40,11 +40,12 @@ const app = express();
 
 // Security headers with Helmet (enforced CSP)
 app.use(helmet({ 
-  crossOriginResourcePolicy: { policy: 'cross-origin' }, 
+  crossOriginEmbedderPolicy: false,          // allow cross-origin <img> etc.
+  crossOriginResourcePolicy: { policy: 'cross-origin' }, // explicitly allow images from Render
   contentSecurityPolicy: { 
     useDefaults: true, 
     directives: { 
-      "default-src": ["'self'", "https://marrakechdunes.vercel.app"], 
+      "default-src": ["'self'", "https://marrakechdunes.vercel.app", "https://*.vercel.app"], 
       "img-src": [
         "'self'", 
         "data:", 
@@ -55,7 +56,7 @@ app.use(helmet({
       ], 
       "script-src": [
         "'self'",
-        // allow Google Maps loader
+        "'unsafe-inline'",
         "https://maps.googleapis.com",
         "https://maps.gstatic.com"
       ], 
@@ -116,6 +117,14 @@ app.use((req, res, next) => {
   next();
 });
 
+// Force CORP for assets if any proxy overrides it
+app.use((req, res, next) => {
+  if (req.path.startsWith('/attached_assets/') || req.path.startsWith('/assets/')) {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
+  next();
+});
+
 // Compression middleware
 app.use(compression());
 
@@ -155,27 +164,27 @@ const cspReportLimiter = rateLimit({
 });
 
 // CORS configuration - must come before other middleware
-const allowList = (process.env.CLIENT_URL || '')
-  .split(',')
-  .map(s => s.trim())
-  .filter(Boolean);
-
-// Only keep our two intended origins
-const canonical = new Set([
+const allowed = new Set([
   'http://localhost:5173',
-  'https://marrakechdunes.vercel.app',
+  'https://marrakechdunes.vercel.app'
 ]);
-const origins = [...canonical]; // ignore any others from env for safety
+
+const isVercelPreview = (origin?: string) =>
+  !!origin && /^https:\/\/marrakechdunes-[a-z0-9-]+\.vercel\.app$/.test(origin);
 
 app.use(cors({
   origin: (origin, cb) => {
-    if (!origin) return cb(null, true); // allow same-origin/SSR
-    return cb(null, origins.includes(origin));
+    if (!origin) return cb(null, true);
+    if (allowed.has(origin) || isVercelPreview(origin)) return cb(null, true);
+    return cb(new Error('Not allowed by CORS'));
   },
-  credentials: true,
+  credentials: true
 }));
 
-console.log('[CORS] Allowed origins:', origins);
+logger.info('CORS configured', { 
+  allowedOrigins: Array.from(allowed),
+  previewPattern: 'https://marrakechdunes-*.vercel.app'
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -37,6 +37,9 @@ jobs:
     - name: Install Playwright browsers
       run: npx playwright install --with-deps chromium
 
+    - name: Warm up backend
+      run: scripts/wait-on-health.sh https://marrakechdunesr.onrender.com/api/health
+
     - name: Run E2E tests against production
       run: npm run test:e2e
       env:
