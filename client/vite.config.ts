@@ -4,8 +4,10 @@ import path from "path";
 import { copy } from 'fs-extra';
 
 export default defineConfig(({ mode }) => {
+  // Load environment variables from client directory first, then root
+  const clientEnv = loadEnv(mode, __dirname, "");
   const rootEnv = loadEnv(mode, path.resolve(__dirname, ".."), "");
-  Object.assign(process.env, rootEnv);
+  Object.assign(process.env, { ...rootEnv, ...clientEnv });
   
   return {
     plugins: [
