@@ -6,5 +6,30 @@
   "framework": "vite",
   "env": {
     "VITE_API_URL": "https://marrakechdunesr.onrender.com"
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/attached_assets/(.*)",
+      "destination": "/attached_assets/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/attached_assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    }
+  ]
 }

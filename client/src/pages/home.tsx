@@ -86,7 +86,9 @@ export default function Home() {
                   video.onerror = () => {
                     videoContainer.innerHTML = `
                       <div style="padding: 40px; color: white; text-align: center;">
-                        <p>Video not found. Please upload promo-video.mp4 to the assets folder.</p>
+                        <h3 style="margin-bottom: 20px; font-size: 24px;">🎥 Promotional Video</h3>
+                        <p style="margin-bottom: 20px; font-size: 16px;">Experience the magic of Morocco through our curated adventures.</p>
+                        <p style="font-size: 14px; opacity: 0.8;">Video coming soon...</p>
                       </div>
                     `;
                   };
