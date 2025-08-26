@@ -36,7 +36,10 @@ export default function ActivityPreview({ activity, isOpen, onClose, onBookNow }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white border-2 border-moroccan-gold/30 shadow-xl">
+      <p id="activity-desc" className="sr-only">
+        Detailed view of {activity.name} - {activity.description}
+      </p>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white border-2 border-moroccan-gold/30 shadow-xl" aria-describedby="activity-desc">
         <DialogHeader>
           <DialogTitle className="font-playfair text-2xl text-moroccan-blue">
             {activity.name}

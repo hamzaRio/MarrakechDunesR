@@ -25,10 +25,28 @@ app.use(helmet({
     useDefaults: true, 
     directives: { 
       "default-src": ["'self'", "https://marrakechdunes.vercel.app"], 
-      "img-src": ["'self'", "data:", "blob:", "https://marrakechdunesr.onrender.com"], 
-      "connect-src": ["'self'", "https://marrakechdunesr.onrender.com"], 
-      "script-src": ["'self'"], 
-      "style-src": ["'self'", "'unsafe-inline'"] 
+      "img-src": [
+        "'self'", 
+        "data:", 
+        "blob:", 
+        "https://marrakechdunesr.onrender.com",
+        "https://maps.googleapis.com",
+        "https://maps.gstatic.com"
+      ], 
+      "script-src": [
+        "'self'",
+        // allow Google Maps loader
+        "https://maps.googleapis.com",
+        "https://maps.gstatic.com"
+      ], 
+      "style-src": ["'self'", "'unsafe-inline'"], 
+      "connect-src": [
+        "'self'", 
+        "https://marrakechdunesr.onrender.com",
+        "https://maps.googleapis.com",
+        "https://maps.gstatic.com"
+      ],
+      "frame-src": ["'self'", "https://www.google.com"]
     }
   }
 }));
