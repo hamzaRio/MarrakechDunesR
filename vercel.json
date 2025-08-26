@@ -1,11 +1,10 @@
 {
   "version": 2,
   "framework": "vite",
-  "installCommand": "npm install",
   "buildCommand": "npm run build --workspace=client",
   "outputDirectory": "client/dist",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://marrakechdunes.onrender.com/api/$1" }
+    { "source": "/api/(.*)", "destination": "https://marrakechdunesr.onrender.com/api/$1" }
   ],
   "routes": [
     { "handle": "filesystem" },
@@ -16,7 +15,8 @@
       "source": "/attached_assets/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=86400" },
-        { "key": "Access-Control-Allow-Origin", "value": "https://*.vercel.app" }
+        { "key": "Access-Control-Allow-Origin", "value": "https://marrakech-dunes.vercel.app" },
+        { "key": "Access-Control-Allow-Credentials", "value": "true" }
       ]
     }
   ]

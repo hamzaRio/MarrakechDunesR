@@ -80,39 +80,8 @@ export function SecurityProvider({ children }: { children: ReactNode }) {
     };
   }, [toast]);
 
-  // Security event logging - COMPLETELY DISABLED to prevent 405 errors
-  const logSecurityEvent = (event: string, details?: any) => {
-    // Completely disabled to prevent 405 errors and console spam
-    return;
-    
-    // TODO: Re-enable when backend security events endpoint is implemented
-    /*
-    if (process.env.NODE_ENV === 'development') {
-      return;
-    }
-    
-    console.log(`[SECURITY] ${event}`, {
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
-      url: window.location.href,
-      details
-    });
-
-    if (process.env.NODE_ENV === 'production') {
-      fetch('/api/security-events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event,
-          details,
-          timestamp: new Date().toISOString(),
-          userAgent: navigator.userAgent,
-          url: window.location.href
-        })
-      }).catch(console.error);
-    }
-    */
-  };
+  // Security event logging - DISABLED to prevent 405 errors
+  const logSecurityEvent = () => {};
 
   // Session timeout warning
   useEffect(() => {
