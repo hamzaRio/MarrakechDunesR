@@ -9,7 +9,7 @@ on:
     branches: [ main, develop ]
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '20'
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
@@ -177,8 +177,15 @@ jobs:
     - name: Upload Trivy scan results to GitHub Security tab
       uses: github/codeql-action/upload-sarif@v3
       if: always()
+      continue-on-error: true
       with:
         sarif_file: 'trivy-results.sarif'
+
+    - name: Security Scan Status
+      run: |
+        echo "Security scan completed"
+        echo "Note: If upload failed, ensure repository has security scanning enabled"
+        echo "Go to Settings > Security & analysis > Code scanning to enable"
 
   # Performance Test
   performance-test:
