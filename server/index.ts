@@ -16,10 +16,27 @@ const app = express();
 app.set('trust proxy', 1);
 
 // CORS configuration - must come before other middleware
+const allowList = (process.env.CLIENT_URL || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
+// Only keep our two intended origins
+const canonical = new Set([
+  'http://localhost:5173',
+  'https://marrakechdunes.vercel.app',
+]);
+const origins = [...canonical]; // ignore any others from env for safety
+
 app.use(cors({
-  origin: process.env.CLIENT_URL?.split(',').map(s => s.trim()),
-  credentials: true
+  origin: (origin, cb) => {
+    if (!origin) return cb(null, true); // allow same-origin/SSR
+    return cb(null, origins.includes(origin));
+  },
+  credentials: true,
 }));
+
+console.log('[CORS] Allowed origins:', origins);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -17,7 +17,7 @@ This project implements a comprehensive CI/CD pipeline using GitHub Actions for 
 2. **Production Environment**
    - Branch: `main`
    - Auto-deploy: Disabled (requires manual approval)
-   - URL: `https://marrakech-dunes.vercel.app`
+   - URL: `https://marrakechdunes.vercel.app`
    - Backend: `https://marrakechdunes.onrender.com`
 
 ## Workflow Files

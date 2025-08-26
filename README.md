@@ -56,7 +56,8 @@ Copy `.env.example` to `.env` and configure:
 - `MONGODB_URI`: MongoDB connection string
 - `SESSION_SECRET`: Secure session secret key
 - `ADMIN_PASSWORD` / `SUPERADMIN_PASSWORD`: Admin user passwords
-- `CLIENT_URL`: Frontend URL for CORS
+- `CLIENT_URL`: Comma-separated list of frontend URLs for CORS (e.g., `http://localhost:5173,https://marrakechdunes.vercel.app`)
+  - **Important**: Must list only front-end origins, not the backend URL and not old preview domains
 
 ## Admin Access
 
