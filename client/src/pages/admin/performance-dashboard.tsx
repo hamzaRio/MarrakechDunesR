@@ -77,18 +77,20 @@ export default function PerformanceDashboard() {
   const [timeRange, setTimeRange] = useState('24h');
   const [autoRefresh, setAutoRefresh] = useState(true);
 
-  const { data: metrics, isLoading, refetch } = useQuery({
+  const { data: metrics, isLoading, refetch } = useQuery<PerformanceMetrics>({
     queryKey: ['/api/admin/performance-metrics', timeRange],
     queryFn: async () => {
       const response = await fetch(`/api/admin/performance-metrics?range=${timeRange}`);
-      return response.json() as PerformanceMetrics;
+      return response.json();
     },
     refetchInterval: autoRefresh ? 30000 : false, // 30 seconds
   });
 
   useEffect(() => {
     const interval = autoRefresh ? setInterval(() => refetch(), 30000) : null;
-    return () => interval && clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [autoRefresh, refetch]);
 
   const getStatusColor = (status: string) => {
