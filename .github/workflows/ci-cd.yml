@@ -18,7 +18,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     
     steps:
     - name: Checkout code
@@ -34,24 +34,28 @@ jobs:
     - name: Configure npm
       run: |
         npm config set registry https://registry.npmjs.org/
-        npm config set fetch-retries 5
-        npm config set fetch-retry-mintimeout 20000
-        npm config set fetch-retry-maxtimeout 120000
+        npm config set fetch-retries 2
+        npm config set fetch-retry-mintimeout 5000
+        npm config set fetch-retry-maxtimeout 30000
+        npm config set prefer-offline true
+        npm config set progress false
 
     - name: Install dependencies
       run: |
-        npm ci --prefer-offline --no-audit
+        npm ci --prefer-offline --no-audit --no-fund
       env:
         NODE_OPTIONS: "--max-old-space-size=4096"
+      timeout-minutes: 5
 
     - name: Retry install if failed
       if: failure()
       run: |
         echo "First install attempt failed, retrying with different strategy..."
         npm cache clean --force
-        npm install --no-package-lock --prefer-offline --no-audit
+        npm install --no-package-lock --prefer-offline --no-audit --no-fund
       env:
         NODE_OPTIONS: "--max-old-space-size=4096"
+      timeout-minutes: 5
 
     - name: Run type checking
       run: npm run check
