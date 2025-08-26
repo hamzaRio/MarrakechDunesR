@@ -80,9 +80,13 @@ export function SecurityProvider({ children }: { children: ReactNode }) {
     };
   }, [toast]);
 
-  // Security event logging
+  // Security event logging - COMPLETELY DISABLED to prevent 405 errors
   const logSecurityEvent = (event: string, details?: any) => {
-    // Skip all security logging in development mode
+    // Completely disabled to prevent 405 errors and console spam
+    return;
+    
+    // TODO: Re-enable when backend security events endpoint is implemented
+    /*
     if (process.env.NODE_ENV === 'development') {
       return;
     }
@@ -94,9 +98,6 @@ export function SecurityProvider({ children }: { children: ReactNode }) {
       details
     });
 
-    // Disable server logging for now to prevent 405 errors
-    // TODO: Implement security events endpoint on backend
-    /*
     if (process.env.NODE_ENV === 'production') {
       fetch('/api/security-events', {
         method: 'POST',

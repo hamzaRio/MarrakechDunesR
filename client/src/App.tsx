@@ -5,7 +5,6 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SecurityProvider } from "@/hooks/use-security";
 import { LanguageProvider } from "@/hooks/use-language";
-import SecurityWrapper from "@/components/security-wrapper";
 import Home from "@/pages/home";
 import Activities from "@/pages/activities";
 import Booking from "@/pages/booking-fixed";
@@ -20,103 +19,52 @@ import NotFound from "@/pages/not-found";
 function Router() {
   return (
     <Switch>
-      {/* Public pages with minimal security for clean experience */}
+      {/* Public pages - SecurityWrapper temporarily disabled to prevent 405 errors */}
       <Route path="/" component={() => (
-        <SecurityWrapper showSecurityStatus={false} enableThreatDetection={false}>
-          <Home />
-        </SecurityWrapper>
+        <Home />
       )} />
       
       <Route path="/activities" component={() => (
-        <SecurityWrapper showSecurityStatus={false} enableThreatDetection={false}>
-          <Activities />
-        </SecurityWrapper>
+        <Activities />
       )} />
       
       <Route path="/reviews" component={() => (
-        <SecurityWrapper showSecurityStatus={false} enableThreatDetection={false}>
-          <Reviews />
-        </SecurityWrapper>
+        <Reviews />
       )} />
       
-      {/* Booking page with minimal security for development */}
+      {/* Booking page */}
       <Route path="/booking" component={() => (
-        <SecurityWrapper 
-          showSecurityStatus={false} 
-          enableThreatDetection={false}
-          requireSecureConnection={false}
-          logPageView={false}
-        >
-          <Booking />
-        </SecurityWrapper>
+        <Booking />
       )} />
       
-      {/* Admin pages with maximum security */}
+      {/* Admin pages - SecurityWrapper temporarily disabled to prevent 405 errors */}
       <Route path="/admin/login" component={() => (
-        <SecurityWrapper 
-          showSecurityStatus={true} 
-          enableThreatDetection={true}
-          requireSecureConnection={false}
-        >
-          <AdminLogin />
-        </SecurityWrapper>
+        <AdminLogin />
       )} />
       
       <Route path="/admin/ceo" component={() => (
-        <SecurityWrapper 
-          showSecurityStatus={true} 
-          enableThreatDetection={true}
-          requireSecureConnection={false}
-        >
-          <CEODashboard />
-        </SecurityWrapper>
+        <CEODashboard />
       )} />
       
       <Route path="/admin/dashboard" component={() => (
-        <SecurityWrapper 
-          showSecurityStatus={true} 
-          enableThreatDetection={true}
-          requireSecureConnection={false}
-        >
-          <AdminDashboard />
-        </SecurityWrapper>
+        <AdminDashboard />
       )} />
       
       <Route path="/admin" component={() => (
-        <SecurityWrapper 
-          showSecurityStatus={true} 
-          enableThreatDetection={true}
-          requireSecureConnection={false}
-        >
-          <AdminDashboard />
-        </SecurityWrapper>
+        <AdminDashboard />
       )} />
       
       <Route path="/admin/performance" component={() => (
-        <SecurityWrapper 
-          showSecurityStatus={true} 
-          enableThreatDetection={true}
-          requireSecureConnection={false}
-        >
-          <PerformanceDashboard />
-        </SecurityWrapper>
+        <PerformanceDashboard />
       )} />
       
       <Route path="/admin/access-guide" component={() => (
-        <SecurityWrapper 
-          showSecurityStatus={false} 
-          enableThreatDetection={false}
-          requireSecureConnection={false}
-        >
-          <AdminAccessGuide />
-        </SecurityWrapper>
+        <AdminAccessGuide />
       )} />
       
       {/* 404 page */}
       <Route component={() => (
-        <SecurityWrapper showSecurityStatus={false} enableThreatDetection={false}>
-          <NotFound />
-        </SecurityWrapper>
+        <NotFound />
       )} />
     </Switch>
   );
