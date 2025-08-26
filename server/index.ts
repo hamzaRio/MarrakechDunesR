@@ -82,6 +82,18 @@ app.get('/api/health', (_req, res) => {
   res.status(200).json({ ok: true, uptime: process.uptime() });
 });
 
+// Diagnostics endpoint (auth-protected)
+app.get('/api/diag', async (req, res) => {
+  // Require an authenticated session (adjust to your auth mechanism)
+  if (!req.user) return res.status(401).json({ ok: false, error: 'unauthorized' });
+
+  // Optional DB ping if you have a driver handy; keep it quick and safe
+  return res.json({
+    ok: true,
+    time: new Date().toISOString()
+  });
+});
+
 // Static mounts with long-cache for images
 app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_assets'), {
   immutable: true,
@@ -100,8 +112,8 @@ app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets'), {
   }
 }));
 
-// No-cache headers for JSON endpoints
-app.use((_req, res, next) => {
+// No-cache headers for API JSON responses only
+app.use('/api', (_req, res, next) => {
   res.setHeader('Surrogate-Control', 'no-store');
   res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.setHeader('Pragma', 'no-cache');

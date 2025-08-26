@@ -24,28 +24,23 @@ jobs:
         cache: 'npm'
         registry-url: 'https://registry.npmjs.org/'
 
-    # Ensure we are not forcing auth for public registry
-    - name: Ensure public npm registry and no auth
+    # Use public npm registry (no auth via CLI)
+    - name: Use public npm registry (no auth via CLI)
       run: |
-        echo "registry=https://registry.npmjs.org/" > .npmrc
-        npm config set always-auth false
-        npm config set fetch-retry-maxtimeout 120000
-        npm config set fetch-timeout 120000
-        npm cache verify || true
+        # Root .npmrc used by all npm invocations
+        cat > .npmrc << 'EOF'
+        registry=https://registry.npmjs.org/
+        always-auth=false
+        fund=false
+        audit=false
+        @*:registry=https://registry.npmjs.org/
+        EOF
 
-    # Clean slate
-    - name: Remove per-package .npmrc files if any
-      run: |
-        find . -name ".npmrc" -not -path "./.npmrc" -print -delete || true
+        # Remove any nested .npmrc that could override these settings
+        find . -type f -name ".npmrc" ! -path "./.npmrc" -delete
 
     - name: Install dependencies (workspace root)
-      run: |
-        if npm ci --ignore-scripts --no-audit --no-fund; then
-          echo "npm ci succeeded"
-        else
-          echo "npm ci failed; falling back to npm install"
-          npm install --ignore-scripts --no-audit --no-fund
-        fi
+      run: npm ci --ignore-scripts --no-audit --no-fund
 
     - name: Run type checking
       run: npm run check
@@ -72,28 +67,23 @@ jobs:
         cache: 'npm'
         registry-url: 'https://registry.npmjs.org/'
 
-    # Ensure we are not forcing auth for public registry
-    - name: Ensure public npm registry and no auth
+    # Use public npm registry (no auth via CLI)
+    - name: Use public npm registry (no auth via CLI)
       run: |
-        echo "registry=https://registry.npmjs.org/" > .npmrc
-        npm config set always-auth false
-        npm config set fetch-retry-maxtimeout 120000
-        npm config set fetch-timeout 120000
-        npm cache verify || true
+        # Root .npmrc used by all npm invocations
+        cat > .npmrc << 'EOF'
+        registry=https://registry.npmjs.org/
+        always-auth=false
+        fund=false
+        audit=false
+        @*:registry=https://registry.npmjs.org/
+        EOF
 
-    # Clean slate
-    - name: Remove per-package .npmrc files if any
-      run: |
-        find . -name ".npmrc" -not -path "./.npmrc" -print -delete || true
+        # Remove any nested .npmrc that could override these settings
+        find . -type f -name ".npmrc" ! -path "./.npmrc" -delete
 
     - name: Install dependencies (workspace root)
-      run: |
-        if npm ci --ignore-scripts --no-audit --no-fund; then
-          echo "npm ci succeeded"
-        else
-          echo "npm ci failed; falling back to npm install"
-          npm install --ignore-scripts --no-audit --no-fund
-        fi
+      run: npm ci --ignore-scripts --no-audit --no-fund
 
     - name: Run tests
       run: npm test --if-present
@@ -117,28 +107,23 @@ jobs:
         cache: 'npm'
         registry-url: 'https://registry.npmjs.org/'
 
-    # Ensure we are not forcing auth for public registry
-    - name: Ensure public npm registry and no auth
+    # Use public npm registry (no auth via CLI)
+    - name: Use public npm registry (no auth via CLI)
       run: |
-        echo "registry=https://registry.npmjs.org/" > .npmrc
-        npm config set always-auth false
-        npm config set fetch-retry-maxtimeout 120000
-        npm config set fetch-timeout 120000
-        npm cache verify || true
+        # Root .npmrc used by all npm invocations
+        cat > .npmrc << 'EOF'
+        registry=https://registry.npmjs.org/
+        always-auth=false
+        fund=false
+        audit=false
+        @*:registry=https://registry.npmjs.org/
+        EOF
 
-    # Clean slate
-    - name: Remove per-package .npmrc files if any
-      run: |
-        find . -name ".npmrc" -not -path "./.npmrc" -print -delete || true
+        # Remove any nested .npmrc that could override these settings
+        find . -type f -name ".npmrc" ! -path "./.npmrc" -delete
 
     - name: Install dependencies (workspace root)
-      run: |
-        if npm ci --ignore-scripts --no-audit --no-fund; then
-          echo "npm ci succeeded"
-        else
-          echo "npm ci failed; falling back to npm install"
-          npm install --ignore-scripts --no-audit --no-fund
-        fi
+      run: npm ci --ignore-scripts --no-audit --no-fund
 
     - name: Build client
       run: npm -w client run build
@@ -197,28 +182,23 @@ jobs:
         cache: 'npm'
         registry-url: 'https://registry.npmjs.org/'
 
-    # Ensure we are not forcing auth for public registry
-    - name: Ensure public npm registry and no auth
+    # Use public npm registry (no auth via CLI)
+    - name: Use public npm registry (no auth via CLI)
       run: |
-        echo "registry=https://registry.npmjs.org/" > .npmrc
-        npm config set always-auth false
-        npm config set fetch-retry-maxtimeout 120000
-        npm config set fetch-timeout 120000
-        npm cache verify || true
+        # Root .npmrc used by all npm invocations
+        cat > .npmrc << 'EOF'
+        registry=https://registry.npmjs.org/
+        always-auth=false
+        fund=false
+        audit=false
+        @*:registry=https://registry.npmjs.org/
+        EOF
 
-    # Clean slate
-    - name: Remove per-package .npmrc files if any
-      run: |
-        find . -name ".npmrc" -not -path "./.npmrc" -print -delete || true
+        # Remove any nested .npmrc that could override these settings
+        find . -type f -name ".npmrc" ! -path "./.npmrc" -delete
 
     - name: Install dependencies (workspace root)
-      run: |
-        if npm ci --ignore-scripts --no-audit --no-fund; then
-          echo "npm ci succeeded"
-        else
-          echo "npm ci failed; falling back to npm install"
-          npm install --ignore-scripts --no-audit --no-fund
-        fi
+      run: npm ci --ignore-scripts --no-audit --no-fund
 
     - name: Check for outdated dependencies
       run: npm outdated || true
