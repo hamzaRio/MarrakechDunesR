@@ -14,11 +14,14 @@ RUN npm config set registry https://registry.npmjs.org/ && \
     npm config set fetch-retry-mintimeout 20000 && \
     npm config set fetch-retry-maxtimeout 120000
 
-# Install all dependencies including dev dependencies
-RUN npm install --legacy-peer-deps --prefer-offline --no-audit || \
-    (echo "First install attempt failed, retrying..." && \
-     npm cache clean --force && \
-     npm install --legacy-peer-deps --prefer-offline --no-audit)
+# Install all dependencies including dev dependencies with robust retry
+RUN for i in 1 2 3; do \
+        echo "Attempt $i of 3: Installing dependencies..." && \
+        npm ci --legacy-peer-deps --prefer-offline --no-audit && break || \
+        (echo "Attempt $i failed, cleaning cache and retrying..." && \
+         npm cache clean --force && \
+         sleep $((i * 5))); \
+    done
 
 # Copy source code
 COPY . .
@@ -45,11 +48,14 @@ RUN npm config set registry https://registry.npmjs.org/ && \
     npm config set fetch-retry-mintimeout 20000 && \
     npm config set fetch-retry-maxtimeout 120000
 
-# Install only production dependencies
-RUN npm ci --omit=dev --legacy-peer-deps --prefer-offline --no-audit || \
-    (echo "First install attempt failed, retrying..." && \
-     npm cache clean --force && \
-     npm ci --omit=dev --legacy-peer-deps --prefer-offline --no-audit)
+# Install only production dependencies with robust retry
+RUN for i in 1 2 3; do \
+        echo "Attempt $i of 3: Installing production dependencies..." && \
+        npm ci --omit=dev --legacy-peer-deps --prefer-offline --no-audit && break || \
+        (echo "Attempt $i failed, cleaning cache and retrying..." && \
+         npm cache clean --force && \
+         sleep $((i * 5))); \
+    done
 
 # Copy built artifacts
 COPY --from=build /app/server/dist ./server/dist
