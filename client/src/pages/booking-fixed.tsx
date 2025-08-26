@@ -117,7 +117,7 @@ export default function BookingFixed() {
       const currentValue = form.getValues(`participantNames.${i}`);
       return currentValue || "";
     });
-    replace(names);
+    replace(names as any);
   }, [numberOfPeople, replace, form]);
 
   const createBookingMutation = useMutation({
