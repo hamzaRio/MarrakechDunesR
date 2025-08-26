@@ -77,7 +77,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     reportOnly: true,
     directives: {
-      "default-src": ["'self'", "https://marrakechdunes.vercel.app"],
+      "default-src": ["'self'", "https://marrakechdunes.vercel.app", "https://*.vercel.app"],
       "img-src": [
         "'self'", 
         "data:", 
@@ -88,6 +88,7 @@ app.use(helmet({
       ],
       "script-src": [
         "'self'",
+        "'unsafe-inline'",
         "https://maps.googleapis.com",
         "https://maps.gstatic.com"
       ],
