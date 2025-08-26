@@ -3,6 +3,7 @@ import path from "node:path";
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
 import express, { type Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { registerRoutes } from "./routes";
 
 // Initialize application with MongoDB
@@ -13,6 +14,13 @@ if (process.env.NODE_ENV === 'development') {
 const app = express();
 // Configure trust proxy for rate limiting  
 app.set('trust proxy', 1);
+
+// CORS configuration - must come before other middleware
+app.use(cors({
+  origin: process.env.CLIENT_URL?.split(',').map(s => s.trim()),
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

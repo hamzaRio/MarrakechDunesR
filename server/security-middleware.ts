@@ -228,9 +228,9 @@ export const sessionSecurity = {
   saveUninitialized: false,
   store: createSessionStore(),
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-    httpOnly: true, // Prevent XSS
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    sameSite: 'lax' as const, // CSRF protection with better compatibility
+    secure: true,
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: 'none' as const
   }
 };
