@@ -139,12 +139,13 @@ const cspReportLimiter = rateLimit({
   }
 });
 
-// CORS configuration - must come before other middleware
+// CORS configuration - only for API routes, not static assets
 const prodOrigin = 'https://marrakechdunes.vercel.app';
 const previewRE = /^https:\/\/marrakechdunes-[a-z0-9-]+\.vercel\.app$/;
 const allowed = new Set(['http://localhost:5173', prodOrigin]);
 
-app.use(cors({
+// Apply CORS only to API routes, not static assets
+app.use('/api', cors({
   origin: (origin, cb) => {
     if (!origin) return cb(null, true); // curl/health/etc.
     if (allowed.has(origin) || previewRE.test(origin)) return cb(null, true);
@@ -155,7 +156,12 @@ app.use(cors({
   allowedHeaders: ['Content-Type','Authorization','X-Requested-With'],
   optionsSuccessStatus: 204
 }));
-app.use((req, res, next) => { res.setHeader('Vary','Origin'); next(); });
+
+// Add Vary: Origin header for API routes
+app.use('/api', (req, res, next) => { 
+  res.setHeader('Vary','Origin'); 
+  next(); 
+});
 
 logger.info('CORS configured', { 
   allowedOrigins: Array.from(allowed),
