@@ -38,29 +38,51 @@ curl -I -H "Origin: https://marrakechdunes-test.vercel.app" \
 - `Access-Control-Allow-Origin: https://marrakechdunes-test.vercel.app`
 - `Access-Control-Allow-Credentials: true`
 
-### 3. Static Assets Check
+### 3. Wildcard Preview Domain CORS Check
+```bash
+curl -I -H "Origin: https://marrakechdunes-abc123.vercel.app" \
+  https://marrakechdunesr.onrender.com/api/auth/user
+```
+**Expected:**
+- `Access-Control-Allow-Origin: https://marrakechdunes-abc123.vercel.app`
+- `Access-Control-Allow-Credentials: true`
+
+### 4. Static Assets Check
 ```bash
 curl -I https://marrakechdunesr.onrender.com/attached_assets/agafay-1.jpg
 ```
 **Expected:**
 - `Cache-Control: public, max-age=31536000, immutable`
+- `Cross-Origin-Resource-Policy: cross-origin`
 - No CORS errors
 
-### 4. CSP Headers Check
+### 5. CSP Headers Check
 ```bash
 curl -I https://marrakechdunesr.onrender.com/
 ```
 **Expected:**
-- `Content-Security-Policy` header present
+- `Content-Security-Policy` header present with:
+  - `style-src-elem` including `https://fonts.googleapis.com`
+  - `font-src` including `https://fonts.gstatic.com`
+  - `frame-src` including `https://www.google.com`
 - `Strict-Transport-Security` header present
 
-### 5. Database Connectivity Check
+### 6. Database Connectivity Check
 ```bash
 curl -i https://marrakechdunesr.onrender.com/api/db-ping
 ```
 **Expected:**
 - Status: 200
 - Response: `{"ok": 1, "message": "Database connected"}`
+
+### 7. CSS Loading Check
+```bash
+curl -I https://marrakechdunes.vercel.app/assets/index-*.css
+```
+**Expected:**
+- Status: 200
+- Content-Type: text/css
+- CSS file loads without CSP violations
 
 ## Browser Checks
 

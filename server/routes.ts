@@ -53,28 +53,7 @@ const requireSuperAdmin = (req: Request, res: Response, next: NextFunction) => {
 
 export async function registerRoutes(app: Express): Promise<Server> {
 
-  // Health check endpoint for deployment monitoring
-  app.get('/api/health', async (req: Request, res: Response) => {
-    try {
-      // Test database connectivity
-      const activitiesCount = await storage.getActivities();
-      
-      res.status(200).json({
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        version: '1.0.0',
-        database: 'connected',
-        activities: activitiesCount.length,
-        environment: process.env.NODE_ENV || 'development'
-      });
-    } catch (error) {
-      res.status(503).json({
-        status: 'unhealthy',
-        timestamp: new Date().toISOString(),
-        error: 'Database connection failed'
-      });
-    }
-  });
+  // Health endpoint is defined in server/index.ts to avoid duplication
 
   // Apply security headers
   app.use(securityHeaders);
