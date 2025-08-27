@@ -4,9 +4,13 @@
 
 ### Render Backend
 ```bash
-CLIENT_URL=http://localhost:5173,https://marrakechdunes.vercel.app
+CLIENT_URL=http://localhost:5173,https://marrakechdunes.vercel.app,https://marrakechdunes-*.vercel.app
 SESSION_SECRET=<generate-32-char-random-string>
 NODE_ENV=production
+MONGODB_URI=<your-mongodb-connection-string>
+JWT_SECRET=<generate-random-64-bytes>
+SUPERADMIN_PASSWORD=<secure-password>
+ADMIN_PASSWORD=<secure-password>
 ```
 
 ### Vercel Frontend
@@ -16,6 +20,8 @@ VITE_ASSETS_BASE=https://marrakechdunesr.onrender.com/attached_assets
 ```
 
 **⚠️ CRITICAL:** These environment variables are required for the client to function properly. Without them, the app will fail to load styles and assets.
+
+**📝 Note:** Production variables are set in Render and Vercel dashboards, not in local .env files.
 
 ## Curl Header Checks
 

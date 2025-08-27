@@ -55,11 +55,11 @@ app.use(helmet({
     directives: {
       "default-src": ["'self'"],
       "connect-src": ["'self'", ...allowedOriginsList],
-      "img-src": ["'self'", "data:", "blob:", "https://images.unsplash.com", "https://maps.gstatic.com", "https://maps.googleapis.com", "https://lh3.googleusercontent.com"],
+      "img-src": ["'self'", "data:", "blob:", "https://images.unsplash.com", "https://maps.googleapis.com", "https://maps.gstatic.com"],
       "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       "style-src-elem": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       "font-src": ["'self'", "https://fonts.gstatic.com"],
-      "script-src": ["'self'", "'unsafe-inline'", "https://maps.googleapis.com", "https://maps.gstatic.com"],
+      "script-src": ["'self'", "https://maps.googleapis.com", "https://maps.gstatic.com"],
       "frame-src": ["'self'", "https://www.google.com"]
     }
   },
