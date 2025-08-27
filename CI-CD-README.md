@@ -76,15 +76,15 @@ VERCEL_PROD_PROJECT_ID=your_production_project_id
 
 #### Database Secrets
 ```
-MONGODB_TEST_URI=mongodb://your_test_db_uri
-MONGODB_PROD_URI=mongodb://your_production_db_uri
+MONGODB_TEST_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<test-database>?retryWrites=true&w=majority
+MONGODB_PROD_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<prod-database>?retryWrites=true&w=majority
 ```
 
 #### Application Secrets
 ```
-SESSION_SECRET=your_session_secret
-SUPERADMIN_PASSWORD=your_superadmin_password
-ADMIN_PASSWORD=your_admin_password
+SESSION_SECRET=example-not-a-secret-session-key-for-development-only
+SUPERADMIN_PASSWORD=example-not-a-secret-superadmin-password
+ADMIN_PASSWORD=example-not-a-secret-admin-password
 WHATSAPP_RECEIVERS=comma_separated_phone_numbers
 ```
 

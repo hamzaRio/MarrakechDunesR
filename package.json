@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
-  "workspaces": ["client", "server", "shared"],
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
   "scripts": {
-    "dev": "NODE_ENV=development tsx server/index.ts",
+    "dev:server": "node --env-file=.env --import tsx server/index.ts",
+    "dev:client": "cd client && vite",
+    "dev": "run-p dev:server dev:client",
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=server/dist",
     "start": "cross-env NODE_ENV=production node server/dist/index.js",
     "check": "tsc -p server/tsconfig.json --noEmit && tsc -p client/tsconfig.json --noEmit",
@@ -117,7 +123,7 @@
     "autoprefixer": "^10.4.20",
     "cross-env": "^10.0.0",
     "esbuild": "^0.25.0",
-
+    "npm-run-all": "^4.1.5",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.1",

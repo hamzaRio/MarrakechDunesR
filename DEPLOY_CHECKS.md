@@ -5,12 +5,12 @@
 ### Render Backend
 ```bash
 CLIENT_URL=http://localhost:5173,https://marrakechdunes.vercel.app,https://marrakechdunes-*.vercel.app
-SESSION_SECRET=<generate-32-char-random-string>
+SESSION_SECRET=example-not-a-secret-session-key-for-development-only
 NODE_ENV=production
-MONGODB_URI=<your-mongodb-connection-string>
-JWT_SECRET=<generate-random-64-bytes>
-SUPERADMIN_PASSWORD=<secure-password>
-ADMIN_PASSWORD=<secure-password>
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority
+JWT_SECRET=example-not-a-secret-jwt-key-for-development-only
+SUPERADMIN_PASSWORD=example-not-a-secret-superadmin-password
+ADMIN_PASSWORD=example-not-a-secret-admin-password
 ```
 
 ### Vercel Frontend

@@ -48,3 +48,16 @@ id = "allow-docs"
 description = "Allow documentation"
 regex = '''README\.md|\.md$'''
 tags = ["allowlist"]
+
+# Allowlist for placeholder values
+[[allowlist.regexes]]
+description = "placeholder mongodb uri"
+regex = '''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<database>\?retryWrites=true&w=majority'''
+
+[[allowlist.regexes]]
+description = "placeholder mongodb uri with test/prod database"
+regex = '''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<[^>]+-database>\?retryWrites=true&w=majority'''
+
+[[allowlist.regexes]]
+description = "example not a secret values"
+regex = '''example-not-a-secret-[a-z-]+'''
