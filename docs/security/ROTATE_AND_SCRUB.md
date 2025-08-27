@@ -127,14 +127,14 @@ If credentials have been leaked:
    # Download from: https://rtyley.github.io/bfg-repo-cleaner/
    ```
 
-2. **Create Text File with Secrets:**
+  2. **Create Text File with Secrets:**
    ```bash
    cat > secrets.txt << 'EOF'
-   mongodb+srv://olduser:oldpass@cluster.mongodb.net/db
-   old-jwt-secret-here
-   old-session-secret-here
-   old-admin-password
-   old-superadmin-password
+   mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<db>
+   <old-jwt-secret-here>
+   <old-session-secret-here>
+   <old-admin-password>
+   <old-superadmin-password>
    EOF
    ```
 
