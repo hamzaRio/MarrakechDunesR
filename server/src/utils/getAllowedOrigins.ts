@@ -4,29 +4,30 @@
  * Supports wildcard preview domains like https://marrakechdunes-*.vercel.app
  */
 
-// Parse CLIENT_URL environment variable
-const clientUrlString = process.env.CLIENT_URL || 'http://localhost:5173';
+// Parse CLIENT_URL environment variable as comma-separated list
+const clientUrlString = process.env.CLIENT_URL || '';
 
-// Require CLIENT_URL in production
-if (process.env.NODE_ENV === 'production' && !process.env.CLIENT_URL) {
+// In production, CLIENT_URL must be set
+if (process.env.NODE_ENV === 'production' && !clientUrlString.trim()) {
   throw new Error('CLIENT_URL environment variable is required in production');
 }
 
-const allowedOriginsList = clientUrlString.split(',').map(url => url.trim()).filter(Boolean);
+const allowedOriginsList = clientUrlString
+  .split(',')
+  .map((url) => url.trim())
+  .filter(Boolean);
 
-// Preview domain regex patterns
-const previewRegexes = [
-  /^https:\/\/marrakechdunes-[a-z0-9-]+\.vercel\.app$/,
-  /^https:\/\/.*--marrakechdunes.*\.vercel\.app$/, // Vercel preview URLs
-];
+// Preview domain regex patterns for Vercel previews
+const previewRegexes = [/^https:\/\/marrakechdunes-[a-z0-9-]+\.vercel\.app$/];
 
 // Build CSP connect-src list
-const cspConnectSrc = [
-  "'self'",
-  ...allowedOriginsList,
-  'https://marrakechdunes.vercel.app',
-  'https://marrakechdunes-*.vercel.app'
-].filter((url, index, arr) => arr.indexOf(url) === index); // Remove duplicates
+const cspConnectSrc = Array.from(
+  new Set([
+    ...allowedOriginsList,
+    'https://marrakechdunes.vercel.app',
+    'https://marrakechdunes-*.vercel.app',
+  ]),
+);
 
 /**
  * Check if an origin is allowed
