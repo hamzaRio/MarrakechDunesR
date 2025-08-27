@@ -24,6 +24,10 @@ jobs:
         cache: 'npm'
         registry-url: 'https://registry.npmjs.org/'
 
+    - name: Install Gitleaks
+      run: |
+        curl -sSfL https://raw.githubusercontent.com/gitleaks/gitleaks/master/install.sh | sh -s -- -b /usr/local/bin v8.18.0
+
     # Use public npm registry (no auth via CLI)
     - name: Use public npm registry (no auth via CLI)
       run: |
@@ -44,6 +48,9 @@ jobs:
 
     - name: Run type checking
       run: npm run check
+
+    - name: Run secret scanning
+      run: npm run scan:secrets
 
     - name: Run ESLint (if available)
       run: npm run lint --if-present
