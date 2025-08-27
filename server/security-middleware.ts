@@ -1,5 +1,4 @@
 import rateLimit from 'express-rate-limit';
-import helmet from 'helmet';
 import MongoStore from 'connect-mongo';
 import MemoryStore from 'memorystore';
 import session from 'express-session';
@@ -149,18 +148,6 @@ export const validateInput = (req: Request, res: Response, next: NextFunction) =
 
   next();
 };
-
-// Helmet configuration for security headers (CSP handled in main server/index.ts)
-export const securityHeaders = helmet({
-  hsts: process.env.NODE_ENV === 'production' ? {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  } : false,
-  noSniff: true,
-  frameguard: { action: 'deny' },
-  xssFilter: true,
-});
 
 // Request logging middleware for admin actions
 export const adminAuditLog = (req: Request, res: Response, next: NextFunction) => {

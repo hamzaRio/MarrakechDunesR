@@ -49,22 +49,33 @@ if (process.env.NODE_ENV === 'development') {
 const app = express();
 
 // Security headers with Helmet (enforced CSP)
-app.use(helmet({
-  contentSecurityPolicy: {
-    useDefaults: true,
-    directives: {
-      "default-src": ["'self'"],
-      "connect-src": cspConnectSrc,
-      "img-src": ["'self'", "data:", "blob:", "https://images.unsplash.com", "https://maps.googleapis.com", "https://maps.gstatic.com"],
-      "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      "style-src-elem": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      "font-src": ["'self'", "https://fonts.gstatic.com"],
-      "script-src": ["'self'", "https://maps.googleapis.com", "https://maps.gstatic.com"],
-      "frame-src": ["'self'", "https://www.google.com"]
-    }
-  },
-  // keep other helmet defaults as-is
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        'default-src': ["'self'"],
+        'connect-src': ["'self'", ...cspConnectSrc],
+        'img-src': [
+          "'self'",
+          'data:',
+          'blob:',
+          'https://images.unsplash.com',
+          'https://maps.googleapis.com',
+          'https://maps.gstatic.com',
+        ],
+        'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        'font-src': ["'self'", 'https://fonts.gstatic.com'],
+        'script-src': [
+          "'self'",
+          'https://maps.googleapis.com',
+          'https://maps.gstatic.com',
+        ],
+        'frame-src': ["'self'", 'https://www.google.com'],
+      },
+    },
+  }),
+);
 
 // Report-To header for CSP violations
 app.use((req, res, next) => {
@@ -201,25 +212,17 @@ app.get('/api/diag', async (req, res) => {
   });
 });
 
-// Static assets with public CORS and long cache
-app.use('/attached_assets', cors({ origin: true, credentials: false }));
-app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_assets'), { 
-  maxAge: '1y', 
-  immutable: true,
-  setHeaders: (res) => {
-    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  }
-}));
-
-// Optional safety: if ever serving client bundles from API
-app.use('/assets', cors({ origin: true, credentials: false }));
-app.use('/assets', express.static(path.join(process.cwd(), 'client/dist/assets'), { 
-  maxAge: '1y', 
-  immutable: true,
-  setHeaders: (res) => {
-    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  }
-}));
+// Serve static attached assets with CORP header
+app.use(
+  '/attached_assets',
+  express.static(path.join(process.cwd(), 'attached_assets'), {
+    maxAge: '1y',
+    immutable: true,
+    setHeaders: (res) => {
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    },
+  }),
+);
 
 // No-cache headers for API JSON responses only
 app.use('/api', (_req, res, next) => {

@@ -130,7 +130,7 @@ If credentials have been leaked:
   2. **Create Text File with Secrets:**
    ```bash
    cat > secrets.txt << 'EOF'
-   ***REMOVED***
+   mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<db>
    <old-jwt-secret-here>
    <old-session-secret-here>
    <old-admin-password>
