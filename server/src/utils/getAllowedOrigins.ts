@@ -6,6 +6,12 @@
 
 // Parse CLIENT_URL environment variable
 const clientUrlString = process.env.CLIENT_URL || 'http://localhost:5173';
+
+// Require CLIENT_URL in production
+if (process.env.NODE_ENV === 'production' && !process.env.CLIENT_URL) {
+  throw new Error('CLIENT_URL environment variable is required in production');
+}
+
 const allowedOriginsList = clientUrlString.split(',').map(url => url.trim()).filter(Boolean);
 
 // Preview domain regex patterns
@@ -13,6 +19,14 @@ const previewRegexes = [
   /^https:\/\/marrakechdunes-[a-z0-9-]+\.vercel\.app$/,
   /^https:\/\/.*--marrakechdunes.*\.vercel\.app$/, // Vercel preview URLs
 ];
+
+// Build CSP connect-src list
+const cspConnectSrc = [
+  "'self'",
+  ...allowedOriginsList,
+  'https://marrakechdunes.vercel.app',
+  'https://marrakechdunes-*.vercel.app'
+].filter((url, index, arr) => arr.indexOf(url) === index); // Remove duplicates
 
 /**
  * Check if an origin is allowed
@@ -44,4 +58,4 @@ export function corsOrigin(origin: string | undefined, cb: (err: Error | null, a
 }
 
 // Export the lists for CSP configuration
-export { allowedOriginsList, previewRegexes };
+export { allowedOriginsList, previewRegexes, cspConnectSrc };

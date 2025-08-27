@@ -90,6 +90,14 @@ curl -I https://marrakechdunes.vercel.app/assets/index-*.css
 - Content-Type: text/css
 - CSS file loads without CSP violations
 
+### 8. HTML Asset References Check
+```bash
+curl -s https://marrakechdunes.vercel.app/ | grep -o '/assets/[^"]*'
+```
+**Expected:**
+- All asset references use relative `/assets/*` paths (same origin)
+- No absolute URLs pointing to Render for JS/CSS files
+
 ## Browser Checks
 
 ### 1. Cookie Security
