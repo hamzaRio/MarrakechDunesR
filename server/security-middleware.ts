@@ -150,21 +150,8 @@ export const validateInput = (req: Request, res: Response, next: NextFunction) =
   next();
 };
 
-// Helmet configuration for security headers
+// Helmet configuration for security headers (CSP handled in main server/index.ts)
 export const securityHeaders = helmet({
-  contentSecurityPolicy: process.env.NODE_ENV === 'production' ? {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      scriptSrc: ["'self'", "'unsafe-eval'"],
-      connectSrc: ["'self'", "https://marrakechdunesr.onrender.com", "https://marrakechdunes.vercel.app"],
-      frameSrc: ["'none'"],
-      objectSrc: ["'none'"],
-      upgradeInsecureRequests: [],
-    },
-  } : false, // Disable CSP in development to allow Vite HMR
   hsts: process.env.NODE_ENV === 'production' ? {
     maxAge: 31536000,
     includeSubDomains: true,
