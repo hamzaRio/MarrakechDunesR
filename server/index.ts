@@ -1,14 +1,22 @@
 import 'dotenv/config';
 import path from "node:path";
 
-// Environment validation - fail fast if secrets are missing
-const required = ['MONGODB_URI', 'SESSION_SECRET', 'SUPERADMIN_PASSWORD', 'ADMIN_PASSWORD'];
-for (const k of required) {
-  if (!process.env[k]) {
-    console.error(`Missing required env: ${k}`);
-    process.exit(1);
-  }
-}
+// Environment validation helper
+const required = (name: string, value?: string) => {
+  if (!value || value.trim() === '') throw new Error(`Missing required env: ${name}`);
+  return value;
+};
+
+// Always require login & crypto secrets
+const ADMIN_PASSWORD = required('ADMIN_PASSWORD', process.env.ADMIN_PASSWORD);
+const SUPERADMIN_PASSWORD = required('SUPERADMIN_PASSWORD', process.env.SUPERADMIN_PASSWORD);
+const JWT_SECRET = required('JWT_SECRET', process.env.JWT_SECRET);
+const SESSION_SECRET = required('SESSION_SECRET', process.env.SESSION_SECRET);
+
+// Mongo is recommended for prod; allow fallback locally (NODE_ENV!=='production')
+const MONGODB_URI = process.env.MONGODB_URI;
+const useFallback = !MONGODB_URI && process.env.NODE_ENV !== 'production';
+if (!MONGODB_URI && !useFallback) throw new Error('MONGODB_URI is required in production');
 
 import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";

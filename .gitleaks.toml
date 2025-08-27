@@ -61,3 +61,15 @@ regex = '''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<[^>]+-dat
 [[allowlist.regexes]]
 description = "example not a secret values"
 regex = '''example-not-a-secret-[a-z-]+'''
+
+[[allowlist.regexes]]
+description = "MongoDB example with username password database"
+regex = '''mongodb\+srv:\/\/<username>:<password>@[^\/]+\/<database>\?retryWrites=true&w=majority'''
+
+[[allowlist.regexes]]
+description = "obvious non-secrets used as examples"
+regex = '''example-not-a-secret(-[a-z-]+)*'''
+
+[[allowlist.regexes]]
+description = "dev change me patterns"
+regex = '''dev-.*-change-me'''
