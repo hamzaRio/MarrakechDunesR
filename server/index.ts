@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import path from "node:path";
 
 // Environment validation - fail fast if secrets are missing
 const required = ['MONGODB_URI', 'SESSION_SECRET', 'SUPERADMIN_PASSWORD', 'ADMIN_PASSWORD'];
