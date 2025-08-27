@@ -212,7 +212,7 @@ const createSessionStore = () => {
     ttl: 24 * 60 * 60, // 24 hours in seconds
     autoRemove: 'native',
     crypto: {
-      secret: process.env.SESSION_SECRET || 'fallback-secret-change-in-production'
+      secret: process.env.SESSION_SECRET!
     }
   });
 };
@@ -222,10 +222,7 @@ const isProd = process.env.NODE_ENV === 'production';
 
 export const sessionSecurity = {
   name: 'marrakech.session',
-  secret: process.env.SESSION_SECRET || (() => {
-    console.error('CRITICAL: SESSION_SECRET not set. Set this environment variable for production!');
-    return 'dev-session-secret-change-in-production';
-  })(),
+  secret: process.env.SESSION_SECRET!,
   resave: false,
   saveUninitialized: false,
   store: createSessionStore(),

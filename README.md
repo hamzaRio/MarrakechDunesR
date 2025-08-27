@@ -56,6 +56,21 @@ Copy `.env.example` to `.env` and configure:
 - `MONGODB_URI`: MongoDB connection string
 - `SESSION_SECRET`: Secure session secret key
 - `ADMIN_PASSWORD` / `SUPERADMIN_PASSWORD`: Admin user passwords
+
+See `.env.example` for the complete list of required variables.
+
+## Rotating Leaked Credentials
+
+If credentials have been exposed or compromised:
+
+1. **Immediate Action**: Follow the [Secret Rotation Runbook](docs/ROTATE_SECRETS.md)
+2. **Database**: Create new MongoDB Atlas user and connection string
+3. **Application**: Generate new session secrets and admin passwords
+4. **Deployment**: Update environment variables on Render and Vercel
+5. **Verification**: Test all functionality with new credentials
+6. **Cleanup**: Revoke old database users and monitor for unauthorized access
+
+**Never commit real secrets to the repository!**
 - `CLIENT_URL`: Comma-separated list of frontend URLs for CORS (e.g., `http://localhost:5173,https://marrakechdunes.vercel.app`)
   - **Important**: Must list only front-end origins, not the backend URL and not old preview domains
 - `PORT`: **On Render**: Remove any PORT env var. Render sets PORT automatically.

@@ -2,6 +2,15 @@ import dotenv from "dotenv";
 import path from "node:path";
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
+// Environment validation - fail fast if secrets are missing
+const required = ['MONGODB_URI', 'SESSION_SECRET', 'SUPERADMIN_PASSWORD', 'ADMIN_PASSWORD'];
+for (const k of required) {
+  if (!process.env[k]) {
+    console.error(`Missing required env: ${k}`);
+    process.exit(1);
+  }
+}
+
 import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";
 import http from "http";
@@ -132,6 +141,25 @@ app.use(express.urlencoded({ extended: false }));
 // Health should be instant and not depend on DB
 app.get('/api/health', (_req, res) => {
   res.status(200).json({ ok: true, uptime: process.uptime() });
+});
+
+// Database connectivity check
+app.get('/api/db-ping', async (_req, res) => {
+  try {
+    // Import mongoose dynamically to avoid circular imports
+    const { default: mongoose } = await import('mongoose');
+    if (!mongoose.connection.db) {
+      throw new Error('Database not connected');
+    }
+    await mongoose.connection.db.admin().ping();
+    res.status(200).json({ ok: 1, message: 'Database connected' });
+  } catch (error) {
+    res.status(503).json({ 
+      ok: 0, 
+      error: 'Database connection failed',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    });
+  }
 });
 
 // CSP Report endpoint

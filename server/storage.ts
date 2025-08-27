@@ -370,9 +370,12 @@ class MongoStorage implements IStorage {
     ];
 
     // Seed admin users with environment variable passwords
-    const defaultPassword = process.env.NODE_ENV === 'development' ? 'Marrakech@2025' : 'ChangeMe123!';
-    const superadminPassword = process.env.SUPERADMIN_PASSWORD || defaultPassword;
-    const adminPassword = process.env.ADMIN_PASSWORD || defaultPassword;
+    const superadminPassword = process.env.SUPERADMIN_PASSWORD;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    
+    if (!superadminPassword || !adminPassword) {
+      throw new Error('SUPERADMIN_PASSWORD and ADMIN_PASSWORD environment variables must be set');
+    }
     
     inMemoryData.users = [
       {

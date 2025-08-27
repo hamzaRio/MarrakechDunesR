@@ -52,6 +52,14 @@ curl -I https://marrakechdunesr.onrender.com/
 - `Content-Security-Policy` header present
 - `Strict-Transport-Security` header present
 
+### 5. Database Connectivity Check
+```bash
+curl -i https://marrakechdunesr.onrender.com/api/db-ping
+```
+**Expected:**
+- Status: 200
+- Response: `{"ok": 1, "message": "Database connected"}`
+
 ## Browser Checks
 
 ### 1. Cookie Security
@@ -106,3 +114,5 @@ curl -I https://marrakechdunesr.onrender.com/
 - [ ] Rate limiting active on auth endpoints
 - [ ] No sensitive data in client-side code
 - [ ] Database connection uses SSL/TLS
+- [ ] `npm run scan:secrets` passes (no findings)
+- [ ] All secrets rotated after any potential leak
