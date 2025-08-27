@@ -20,7 +20,7 @@ import compression from 'compression';
 import morgan from 'morgan';
 import winston from 'winston';
 import { registerRoutes } from "./routes";
-import { corsOrigin, allowedOriginsList } from "./src/utils/getAllowedOrigins";
+import { corsOrigin, allowedOriginsList, cspConnectSrc } from "./src/utils/getAllowedOrigins";
 
 // Initialize JSON logger
 const logger = winston.createLogger({
@@ -54,7 +54,7 @@ app.use(helmet({
     useDefaults: true,
     directives: {
       "default-src": ["'self'"],
-      "connect-src": ["'self'", ...allowedOriginsList],
+      "connect-src": cspConnectSrc,
       "img-src": ["'self'", "data:", "blob:", "https://images.unsplash.com", "https://maps.googleapis.com", "https://maps.gstatic.com"],
       "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       "style-src-elem": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
@@ -211,9 +211,9 @@ app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_as
   }
 }));
 
-// Alias so frontend can always use /assets/<file>
+// Optional safety: if ever serving client bundles from API
 app.use('/assets', cors({ origin: true, credentials: false }));
-app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets'), { 
+app.use('/assets', express.static(path.join(process.cwd(), 'client/dist/assets'), { 
   maxAge: '1y', 
   immutable: true,
   setHeaders: (res) => {
