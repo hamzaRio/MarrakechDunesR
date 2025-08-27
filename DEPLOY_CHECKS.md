@@ -154,3 +154,23 @@ curl -s https://marrakechdunes.vercel.app/ | grep -o '/assets/[^"]*'
 - [ ] Database connection uses SSL/TLS
 - [ ] `npm run scan:secrets` passes (no findings)
 - [ ] All secrets rotated after any potential leak
+
+## Quick Verification Commands
+
+### CSP Headers Check
+```bash
+curl -I https://marrakechdunesr.onrender.com | grep -i content-security-policy
+```
+**Expected:** CSP header present with Google Fonts/Maps domains
+
+### Static Assets Check
+```bash
+curl -I https://marrakechdunesr.onrender.com/attached_assets/agafay-1.jpg
+```
+**Expected:** 200 status with `Cross-Origin-Resource-Policy: cross-origin`
+
+### CORS Check
+```bash
+curl -I -H "Origin: https://marrakechdunes.vercel.app" https://marrakechdunesr.onrender.com/api/health
+```
+**Expected:** `Access-Control-Allow-Origin: https://marrakechdunes.vercel.app` with credentials
