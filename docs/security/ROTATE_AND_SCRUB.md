@@ -127,14 +127,14 @@ If credentials have been leaked:
    # Download from: https://rtyley.github.io/bfg-repo-cleaner/
    ```
 
-2. **Create Text File with Secrets:**
+  2. **Create Text File with Secrets:**
    ```bash
    cat > secrets.txt << 'EOF'
    ***REMOVED***
-   old-jwt-secret-here
-   old-session-secret-here
-   old-admin-password
-   old-superadmin-password
+   <old-jwt-secret-here>
+   <old-session-secret-here>
+   <old-admin-password>
+   <old-superadmin-password>
    EOF
    ```
 
