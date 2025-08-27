@@ -57,6 +57,7 @@ app.use(helmet({
       "connect-src": ["'self'", ...allowedOriginsList],
       "img-src": ["'self'", "data:", "blob:", "https://images.unsplash.com", "https://maps.gstatic.com", "https://maps.googleapis.com", "https://lh3.googleusercontent.com"],
       "style-src": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      "style-src-elem": ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       "font-src": ["'self'", "https://fonts.gstatic.com"],
       "script-src": ["'self'", "'unsafe-inline'", "https://maps.googleapis.com", "https://maps.gstatic.com"],
       "frame-src": ["'self'", "https://www.google.com"]
@@ -194,18 +195,24 @@ app.get('/api/diag', async (req, res) => {
   });
 });
 
-// Static assets with CORS and long cache
-app.use('/attached_assets', cors({ origin: corsOrigin, credentials: false }));
+// Static assets with public CORS and long cache
+app.use('/attached_assets', cors({ origin: true, credentials: false }));
 app.use('/attached_assets', express.static(path.join(process.cwd(), 'attached_assets'), { 
   maxAge: '1y', 
-  immutable: true 
+  immutable: true,
+  setHeaders: (res) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
 }));
 
 // Alias so frontend can always use /assets/<file>
-app.use('/assets', cors({ origin: corsOrigin, credentials: false }));
+app.use('/assets', cors({ origin: true, credentials: false }));
 app.use('/assets', express.static(path.join(process.cwd(), 'attached_assets'), { 
   maxAge: '1y', 
-  immutable: true 
+  immutable: true,
+  setHeaders: (res) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+  }
 }));
 
 // No-cache headers for API JSON responses only

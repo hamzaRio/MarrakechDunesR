@@ -15,6 +15,8 @@ VITE_API_URL=https://marrakechdunesr.onrender.com
 VITE_ASSETS_BASE=https://marrakechdunesr.onrender.com/attached_assets
 ```
 
+**⚠️ CRITICAL:** These environment variables are required for the client to function properly. Without them, the app will fail to load styles and assets.
+
 ## Curl Header Checks
 
 ### 1. CORS Preflight Check
