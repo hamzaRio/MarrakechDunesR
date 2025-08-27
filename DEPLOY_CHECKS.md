@@ -159,18 +159,18 @@ curl -s https://marrakechdunes.vercel.app/ | grep -o '/assets/[^"]*'
 
 ### CSP Headers Check
 ```bash
-curl -I https://marrakechdunesr.onrender.com | grep -i content-security-policy
+curl -I https://marrakechdunesr.onrender.com | grep -i "content-security-policy"
 ```
 **Expected:** CSP header present with Google Fonts/Maps domains
 
 ### Static Assets Check
 ```bash
-curl -I https://marrakechdunesr.onrender.com/attached_assets/agafay-1.jpg
+curl -I https://marrakechdunesr.onrender.com/attached_assets/agafay-1.jpg | grep -i "Cross-Origin-Resource-Policy"
 ```
 **Expected:** 200 status with `Cross-Origin-Resource-Policy: cross-origin`
 
 ### CORS Check
 ```bash
-curl -I -H "Origin: https://marrakechdunes.vercel.app" https://marrakechdunesr.onrender.com/api/health
+curl -I -H "Origin: https://marrakechdunes.vercel.app" https://marrakechdunesr.onrender.com/api/health | grep -Ei "access-control-allow-origin|credentials"
 ```
 **Expected:** `Access-Control-Allow-Origin: https://marrakechdunes.vercel.app` with credentials

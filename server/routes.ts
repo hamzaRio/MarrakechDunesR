@@ -15,7 +15,6 @@ import {
   adminSecurityMiddleware,
   superadminSecurityMiddleware,
   validateInput,
-  securityHeaders,
   adminAuditLog,
   sessionSecurity
 } from "./security-middleware";
@@ -55,9 +54,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Health endpoint is defined in server/index.ts to avoid duplication
 
-  // Apply security headers
-  app.use(securityHeaders);
-  
   // Apply HTTPS enforcement for production
   app.use(enforceHTTPS);
   
