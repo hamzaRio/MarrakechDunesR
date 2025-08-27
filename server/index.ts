@@ -117,19 +117,25 @@ const cspReportLimiter = rateLimit({
   }
 });
 
-// CORS configuration using utility
-app.use(cors({ 
+// CORS configuration for API routes only
+app.use('/api', cors({ 
   origin: corsOrigin, 
   credentials: true, 
   methods: ['GET','POST','PUT','PATCH','DELETE','OPTIONS'], 
   allowedHeaders: ['Content-Type','Authorization','X-Requested-With'] 
 }));
 
-// Explicit OPTIONS handler for all routes
-app.options('*', cors({ 
+// Explicit OPTIONS handler for API routes
+app.options('/api/*', cors({ 
   origin: corsOrigin, 
   credentials: true 
 }));
+
+// Add Vary: Origin header for API routes
+app.use('/api', (req, res, next) => {
+  res.setHeader('Vary', 'Origin');
+  next();
+});
 
 logger.info('CORS configured', { 
   allowedOrigins: allowedOriginsList,
