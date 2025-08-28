@@ -1,14 +1,22 @@
-title = "MarrakechDunesR gitleaks (RE2 safe)"
+title = "MarrakechDunesR gitleaks"
+# Keep it RE2-compatible (no lookbehind, no PCRE).
+[[rules]]
+id = "mongo_uri"
+description = "Potential MongoDB connection URI with credentials"
+regex = '''mongodb(+srv)?://[^/\s:@]+:[^/\s@]+@[^/\s]+/[^\s"']+'''
+tags = ["secret","mongo"]
 
 [allowlist]
-# These folders may contain fixtures or docs; don't blow up the scan.
+
+# Ignore docs and the example env file
 paths = [
-  "docs/*",
-  "e2e/*",
-  "test-results/*"
+'''^.env.example$''',
+'''^docs/.*'''
 ]
 
-# A placeholder pattern we intentionally allow in .env.example:
+# Ignore obvious placeholders
 regexes = [
-  '''MONGODB_URI=YOUR_MONGODB_URI'''
+'''YOUR_MONGODB_URI''',
+'''your-secure-.*'''
 ]
+

@@ -19,10 +19,10 @@
     "start": "cross-env NODE_ENV=production node server/dist/index.js",
     "check": "node -e \"console.log('ok')\"",
     "typecheck": "npm -ws run typecheck || true",
-    "scan:secrets": "bash scripts/run-gitleaks.sh",
+    "scan:secrets": "bash ./scripts/run-gitleaks.sh",
     "test:e2e": "playwright test --reporter=line",
     "db:push": "drizzle-kit push",
-    "test": "node -e \"console.log('ok - no tests yet')\""
+    "test": "node -e \"console.log('no tests yet')\""
   },
   "dependencies": {
     "@google-cloud/storage": "^7.17.0",
