@@ -21,7 +21,7 @@
     "typecheck": "npm -ws run typecheck || true",
     "test:e2e": "playwright test --reporter=line",
     "db:push": "drizzle-kit push",
-    "test": "node -e \"process.exit(0)\""
+    "test": "echo \"No tests yet\" && exit 0"
   },
   "dependencies": {
     "@google-cloud/storage": "^7.17.0",
