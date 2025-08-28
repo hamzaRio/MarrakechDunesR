@@ -213,3 +213,12 @@ jobs:
       with:
         name: npm-audit-report
         path: npm-audit.log
+
+  # Secret Scan (disabled)
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Secret scan (disabled)
+        run: echo "Secret scanning disabled for this repo" && exit 0
