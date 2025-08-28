@@ -4,7 +4,11 @@
   "private": true,
   "type": "module",
   "license": "MIT",
-  "workspaces": ["client", "server", "shared"],
+  "workspaces": [
+    "client",
+    "server",
+    "shared"
+  ],
   "scripts": {
     "dev:server": "cross-env NODE_ENV=development tsx server/index.ts",
     "dev:client": "cross-env NODE_ENV=development vite --host",
@@ -15,9 +19,10 @@
     "start": "cross-env NODE_ENV=production node server/dist/index.js",
     "check": "node -e \"console.log('ok')\"",
     "typecheck": "npm -ws run typecheck || true",
-    "scan:secrets": "gitleaks detect --no-banner --redact || echo 'Gitleaks not installed. Install from https://github.com/gitleaks/gitleaks'",
+    "scan:secrets": "bash scripts/run-gitleaks.sh",
     "test:e2e": "playwright test --reporter=line",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "test": "node -e \"console.log('ok - no tests yet')\""
   },
   "dependencies": {
     "@google-cloud/storage": "^7.17.0",
