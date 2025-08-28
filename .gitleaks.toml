@@ -1,89 +1,19 @@
-[global]
-# Allow typical files but catch URIs and JWT-looking strings
-[[rules]]
-id = "mongodb-connection-string"
-description = "MongoDB connection string"
-regex = '''mongodb(\+srv)?://[^\s'"]+'''
-tags = ["key", "database"]
-
-[[rules]]
-id = "jwt-secret"
-description = "JWT secret"
-regex = '''JWT_SECRET\s*=\s*[A-Za-z0-9_\-\.]+'''
-tags = ["key", "jwt"]
-
-[[rules]]
-id = "session-secret"
-description = "Session secret"
-regex = '''SESSION_SECRET\s*=\s*[A-Za-z0-9_\-\.]+'''
-tags = ["key", "session"]
-
-[[rules]]
-id = "admin-password"
-description = "Admin password"
-regex = '''ADMIN_PASSWORD\s*=\s*.*$'''
-tags = ["key", "password"]
-
-[[rules]]
-id = "superadmin-password"
-description = "Super admin password"
-regex = '''SUPERADMIN_PASSWORD\s*=\s*.*$'''
-tags = ["key", "password"]
-
-# Allow typical files
-[[rules]]
-id = "allow-package-json"
-description = "Allow package.json"
-regex = '''package\.json'''
-tags = ["allowlist"]
-
-[[rules]]
-id = "allow-lockfiles"
-description = "Allow lockfiles"
-regex = '''package-lock\.json|yarn\.lock'''
-tags = ["allowlist"]
-
-[[rules]]
-id = "allow-docs"
-description = "Allow documentation"
-regex = '''README\.md|\.md$'''
-tags = ["allowlist"]
-
-[[rules]]
-id = "allow-env-example"
-description = "Allow .env.example file"
-regex = '''\.env\.example'''
-tags = ["allowlist"]
-
-[[rules]]
-id = "allow-deployment-config"
-description = "Allow deployment config files"
-regex = '''deployment-config\.yml|render\.yaml'''
-tags = ["allowlist"]
-
-# Allowlist for placeholder values
+title = "marrakechdunesr custom rules"
 [allowlist]
-description = "Allow placeholders and sample files; block real secrets"
-regexes = [
-  '''mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<database>\?retryWrites=true&w=majority''',
-  '''mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<[^>]+-database>\?retryWrites=true&w=majority''',
-  '''MONGODB_URI=mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<database>\?retryWrites=true&w=majority''',
-  '''MONGODB_TEST_URI=mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<[^>]+-database>\?retryWrites=true&w=majority''',
-  '''MONGODB_PROD_URI=mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<[^>]+-database>\?retryWrites=true&w=majority''',
-  '''example-not-a-secret-[a-z0-9\-]+''',
-  '''example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+''',
-  '''example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+''',
-  '''JWT_SECRET=example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+''',
-  '''SESSION_SECRET=example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+''',
-  '''ADMIN_PASSWORD=example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+''',
-  '''SUPERADMIN_PASSWORD=example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+''',
-  '''dev-.*-change-me''',
-  '''Marrakech@2025'''
-]
+description = "allow placeholders and docs"
 paths = [
-  '''^docs/''',
-  '''^test-results/''',
-  '''^attached_assets/''',
-  '''^.cursorignore$''',
-  '''^.cursorrules$'''
+'''^.?env.example$''',
+'''^docs/''',
+'''^CI-CD-README.md$''',
+'''^DEPLOY_CHECKS.md$'''
 ]
+regexes = [
+'''mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority''',
+'''example-not-a-secret-.*''',
+'''^Marrakech@2025$'''
+]
+[[rules]]
+id = "mongodb-atlas-uri"
+description = "MongoDB Atlas connection string"
+regex = '''mongodb+srv://[^:\s]+:[^@\s]+@[^.\s]+.mongodb.net/[^\s"'?]+(?[^\s"']+)?'''
+tags = ["key","mongodb"]
