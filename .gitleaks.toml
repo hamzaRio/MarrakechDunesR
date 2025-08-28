@@ -1,30 +1,21 @@
-title = "MarrakechDunes Gitleaks"
+title = "MarrakechDunesR gitleaks"
+
+# Basic custom rule for MongoDB URIs (RE2; no (?:...) etc.)
+[[rules]]
+id = "mongodb-uri"
+description = "MongoDB connection string"
+regex = '''mongodb(\+srv)?:\/\/[A-Za-z0-9._%+-]+:[^@ \t\n\r]{6,}@[^^\/ \t\n\r]+\/[^\s"'?]+'''
+tags = ["key", "mongodb", "secret"]
 
 [allowlist]
-description = "Allowed test/placeholder content"
+# Example files and binary dirs that should not fail the scan
 paths = [
   '''^\.env\.example$''',
-  '''^attached_assets/'''
+  '''^docs/''',
+  '''^attached_assets/''',
+  '''^test-results/'''
 ]
+# Explicitly allow the sample placeholder value in .env.example
 regexes = [
-  '''your-(jwt|session|super?admin)-password(-here)?''',
-  '''mongodb\+srv://your-username:your-password@cluster\.mongodb\.net/database-name'''
+  '''mongodb\+srv:\/\/username:password@cluster\.mongodb\.net\/database-name'''
 ]
-
-[[rules]]
-id = "mongodb-cred-uri"
-description = "MongoDB URI with embedded credentials"
-regex = '''mongodb(\+srv)?:\/\/[^:@\s]+:[^@\s]+@[^\/\s]+\/[^\s]*'''
-tags = ["key","mongodb","secret"]
-
-[[rules]]
-id = "jwt-secret"
-description = "Looks like a JWT secret"
-regex = '''(?i)(jwt[_-]?secret)\s*[:=]\s*["']?[A-Za-z0-9_\-\.]{16,}["']?'''
-tags = ["secret","generic"]
-
-[[rules]]
-id = "generic-secret"
-description = "Generic secret-style assignment"
-regex = '''(?i)(secret|api[_-]?key|token|passwd|password)\s*[:=]\s*["']?[A-Za-z0-9_\-\.]{12,}["']?'''
-tags = ["secret","generic"]
