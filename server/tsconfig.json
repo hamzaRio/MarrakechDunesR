@@ -3,13 +3,14 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022"],
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "strict": true,
     "downlevelIteration": true,
     "types": ["node", "express", "express-session"],
     "skipLibCheck": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "allowImportingTsExtensions": true
   },
   "include": ["**/*.ts", "../shared/**/*.ts", "src/types/**/*.d.ts"]
 }
