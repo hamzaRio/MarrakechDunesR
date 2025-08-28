@@ -33,10 +33,8 @@ RUN npm run build --workspace=server
 # --- Production Stage ---
 FROM node:20-slim AS prod
 WORKDIR /app
-
-# Install curl for health checks and clean cache
-RUN apt-get update && apt-get install -y curl && \
-    rm -rf /var/lib/apt/lists/*
+# tiny helper for healthcheck
+RUN apt-get update && apt-get install -y curl >/dev/null 2>&1 || true
 
 # Copy package files for production dependencies
 COPY --from=build /app/package*.json ./
@@ -68,10 +66,6 @@ ENV PORT=5000
 
 # Expose port
 EXPOSE 5000
-
-# Add health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:5000/api/health || exit 1
-
+HEALTHCHECK --interval=30s --timeout=5s --retries=5 CMD curl -fsS http://localhost:5000/api/health || exit 1
 # Start the server
 CMD ["node", "server/dist/index.js"]

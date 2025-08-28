@@ -8,8 +8,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, Award, MapPin, Calendar, Play } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { asset } from "@/lib/env";
-
-const SHOW_PROMO = import.meta.env.VITE_ENABLE_PROMO_VIDEO === 'true';
 // Single hero background image - force refresh
 const heroBackgroundImage = asset("riad-kheirredine_1756041288677.jpg");
 
@@ -70,7 +68,7 @@ export default function Home() {
                     background: black; border-radius: 8px; overflow: hidden;
                   `;
                   
-                  if (SHOW_PROMO) {
+                  if (import.meta.env.VITE_ENABLE_PROMO_VIDEO === "true") {
                     const video = document.createElement('video');
                     video.src = asset("promo-video.mp4");
                     video.controls = true;

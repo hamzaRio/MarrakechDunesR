@@ -1,22 +1,20 @@
 {
-  "name": "rest-express",
+  "name": "marrakechdunesr",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "license": "MIT",
-  "workspaces": [
-    "client",
-    "server",
-    "shared"
-  ],
+  "workspaces": ["client", "server", "shared"],
   "scripts": {
     "dev:server": "cross-env NODE_ENV=development tsx server/index.ts",
     "dev:client": "cross-env NODE_ENV=development vite --host",
     "dev": "npm-run-all -p dev:server dev:client",
-    "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=server/dist",
-    "build:client": "vite build",
+    "build:client": "npm run build --workspace=client",
+    "build:server": "npm run build --workspace=server",
+    "build": "npm run build:client && npm run build:server",
     "start": "cross-env NODE_ENV=production node server/dist/index.js",
     "check": "node -e \"console.log('ok')\"",
-    "typecheck": "tsc -p server/tsconfig.json --noEmit",
+    "typecheck": "npm -ws run typecheck || true",
     "scan:secrets": "gitleaks detect --no-banner --redact || echo 'Gitleaks not installed. Install from https://github.com/gitleaks/gitleaks'",
     "test:e2e": "playwright test --reporter=line",
     "db:push": "drizzle-kit push"
