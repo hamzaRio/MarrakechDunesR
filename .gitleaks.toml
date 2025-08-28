@@ -52,10 +52,10 @@ tags = ["allowlist"]
 # Allowlist for placeholder values
 [allowlist]
 regexes = [
-  '''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<database>\?retryWrites=true&w=majority''',
-  '''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<[^>]+-database>\?retryWrites=true&w=majority''',
+  '''mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<database>\?retryWrites=true&w=majority''',
+  '''mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<[^>]+-database>\?retryWrites=true&w=majority''',
   '''example-not-a-secret-[a-z-]+''',
-  '''mongodb\+srv:\/\/<username>:<password>@[^\/]+\/<database>\?retryWrites=true&w=majority''',
-  '''example-not-a-secret(-[a-z-]+)*''',
+  '''example-not-a-secret-[a-z-]+-[a-z-]+-[a-z-]+''',
+  '''example-not-a-secret-[a-z-]+-[a-z-]+-[a-z-]+-[a-z-]+''',
   '''dev-.*-change-me'''
 ]
