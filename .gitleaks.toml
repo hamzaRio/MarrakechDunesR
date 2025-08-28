@@ -51,19 +51,19 @@ tags = ["allowlist"]
 
 # Allowlist for placeholder values
 [[allowlist.regexes]]
-mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<database>\?retryWrites=true&w=majority
+'''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<database>\?retryWrites=true&w=majority'''
 
 [[allowlist.regexes]]
-mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<[^>]+-database>\?retryWrites=true&w=majority
+'''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<[^>]+-database>\?retryWrites=true&w=majority'''
 
 [[allowlist.regexes]]
-example-not-a-secret-[a-z-]+
+'''example-not-a-secret-[a-z-]+'''
 
 [[allowlist.regexes]]
-mongodb\+srv:\/\/<username>:<password>@[^\/]+\/<database>\?retryWrites=true&w=majority
+'''mongodb\+srv:\/\/<username>:<password>@[^\/]+\/<database>\?retryWrites=true&w=majority'''
 
 [[allowlist.regexes]]
-example-not-a-secret(-[a-z-]+)*
+'''example-not-a-secret(-[a-z-]+)*'''
 
 [[allowlist.regexes]]
-dev-.*-change-me
+'''dev-.*-change-me'''
