@@ -7,16 +7,42 @@ const required = (name: string, value?: string) => {
   return value;
 };
 
-// Always require login & crypto secrets
-const ADMIN_PASSWORD = required('ADMIN_PASSWORD', process.env.ADMIN_PASSWORD);
-const SUPERADMIN_PASSWORD = required('SUPERADMIN_PASSWORD', process.env.SUPERADMIN_PASSWORD);
-const JWT_SECRET = required('JWT_SECRET', process.env.JWT_SECRET);
-const SESSION_SECRET = required('SESSION_SECRET', process.env.SESSION_SECRET);
+// Environment validation helper for optional values (with fallback)
+const optional = (name: string, value?: string, fallback?: string) => {
+  if (!value || value.trim() === '') {
+    if (fallback) {
+      console.warn(`Missing env: ${name}, using fallback value`);
+      return fallback;
+    }
+    throw new Error(`Missing required env: ${name}`);
+  }
+  return value;
+};
 
 // Mongo is recommended for prod; allow fallback locally (NODE_ENV!=='production')
 const MONGODB_URI = process.env.MONGODB_URI;
 const useFallback = !MONGODB_URI && process.env.NODE_ENV !== 'production';
-if (!MONGODB_URI && !useFallback) throw new Error('MONGODB_URI is required in production');
+
+if (!MONGODB_URI && !useFallback) {
+  throw new Error('MONGODB_URI is required in production');
+}
+
+if (useFallback) {
+  console.warn('Running in fallback mode - MongoDB not configured, using in-memory data');
+}
+
+// In fallback mode, allow placeholder values for admin passwords
+const ADMIN_PASSWORD = useFallback 
+  ? optional('ADMIN_PASSWORD', process.env.ADMIN_PASSWORD, 'dev-admin-change-me')
+  : required('ADMIN_PASSWORD', process.env.ADMIN_PASSWORD);
+
+const SUPERADMIN_PASSWORD = useFallback
+  ? optional('SUPERADMIN_PASSWORD', process.env.SUPERADMIN_PASSWORD, 'dev-superadmin-change-me')
+  : required('SUPERADMIN_PASSWORD', process.env.SUPERADMIN_PASSWORD);
+
+// Always require crypto secrets (even in fallback mode for security)
+const JWT_SECRET = required('JWT_SECRET', process.env.JWT_SECRET);
+const SESSION_SECRET = required('SESSION_SECRET', process.env.SESSION_SECRET);
 
 import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";

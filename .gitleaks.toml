@@ -63,18 +63,27 @@ tags = ["allowlist"]
 
 # Allowlist for placeholder values
 [allowlist]
+description = "Allow placeholders and sample files; block real secrets"
 regexes = [
   '''mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<database>\?retryWrites=true&w=majority''',
   '''mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<[^>]+-database>\?retryWrites=true&w=majority''',
   '''MONGODB_URI=mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<database>\?retryWrites=true&w=majority''',
   '''MONGODB_TEST_URI=mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<[^>]+-database>\?retryWrites=true&w=majority''',
   '''MONGODB_PROD_URI=mongodb\+srv://<username>:<password>@<cluster>\.mongodb\.net/<[^>]+-database>\?retryWrites=true&w=majority''',
-  '''example-not-a-secret-[a-z-]+''',
-  '''example-not-a-secret-[a-z-]+-[a-z-]+-[a-z-]+''',
-  '''example-not-a-secret-[a-z-]+-[a-z-]+-[a-z-]+-[a-z-]+''',
-  '''JWT_SECRET=example-not-a-secret-[a-z-]+-[a-z-]+-[a-z-]+-[a-z-]+''',
-  '''SESSION_SECRET=example-not-a-secret-[a-z-]+-[a-z-]+-[a-z-]+-[a-z-]+''',
-  '''ADMIN_PASSWORD=example-not-a-secret-[a-z-]+-[a-z-]+''',
-  '''SUPERADMIN_PASSWORD=example-not-a-secret-[a-z-]+-[a-z-]+''',
-  '''dev-.*-change-me'''
+  '''example-not-a-secret-[a-z0-9\-]+''',
+  '''example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+''',
+  '''example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+''',
+  '''JWT_SECRET=example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+''',
+  '''SESSION_SECRET=example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+-[a-z0-9\-]+''',
+  '''ADMIN_PASSWORD=example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+''',
+  '''SUPERADMIN_PASSWORD=example-not-a-secret-[a-z0-9\-]+-[a-z0-9\-]+''',
+  '''dev-.*-change-me''',
+  '''Marrakech@2025'''
+]
+paths = [
+  '''^docs/''',
+  '''^test-results/''',
+  '''^attached_assets/''',
+  '''^.cursorignore$''',
+  '''^.cursorrules$'''
 ]

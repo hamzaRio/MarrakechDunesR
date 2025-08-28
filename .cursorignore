@@ -53,3 +53,4 @@ coverage/
 *.lcov
 
 # Note: .env.example is NOT excluded - it should be included in context
+!.env.example

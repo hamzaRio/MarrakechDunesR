@@ -9,6 +9,16 @@ interface User {
 
 export async function fetchCurrentUser(): Promise<User | null> {
   try {
+    // Check if we have any indication of a session first
+    const hasSession = document.cookie.includes('connect.sid') || 
+                      localStorage.getItem('auth_token') ||
+                      sessionStorage.getItem('auth_token');
+    
+    // Only make the API call if we have some indication of authentication
+    if (!hasSession) {
+      return null;
+    }
+    
     const res = await fetch(`${API_URL}/api/auth/user`, {
       credentials: "include"
     });
