@@ -8,6 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, Award, MapPin, Calendar, Play } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { asset } from "@/lib/env";
+
+const SHOW_PROMO = import.meta.env.VITE_ENABLE_PROMO_VIDEO === 'true';
 // Single hero background image - force refresh
 const heroBackgroundImage = asset("riad-kheirredine_1756041288677.jpg");
 
@@ -68,22 +70,43 @@ export default function Home() {
                     background: black; border-radius: 8px; overflow: hidden;
                   `;
                   
-                  const video = document.createElement('video');
-                  video.src = asset("promo-video.mp4");
-                  video.controls = true;
-                  video.autoplay = true;
-                  video.style.cssText = 'width: 100%; height: auto; max-height: 80vh;';
-                  
-                  const closeBtn = document.createElement('button');
-                  closeBtn.innerHTML = '×';
-                  closeBtn.style.cssText = `
-                    position: absolute; top: 10px; right: 15px; color: white;
-                    background: rgba(0,0,0,0.7); border: none; font-size: 24px;
-                    width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
-                  `;
-                  
-                  // Handle video loading error
-                  video.onerror = () => {
+                  if (SHOW_PROMO) {
+                    const video = document.createElement('video');
+                    video.src = asset("promo-video.mp4");
+                    video.controls = true;
+                    video.autoplay = true;
+                    video.style.cssText = 'width: 100%; height: auto; max-height: 80vh;';
+                    
+                    const closeBtn = document.createElement('button');
+                    closeBtn.innerHTML = '×';
+                    closeBtn.style.cssText = `
+                      position: absolute; top: 10px; right: 15px; color: white;
+                      background: rgba(0,0,0,0.7); border: none; font-size: 24px;
+                      width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+                    `;
+                    
+                    // Handle video loading error
+                    video.onerror = () => {
+                      videoContainer.innerHTML = `
+                        <div style="padding: 40px; color: white; text-align: center;">
+                          <h3 style="margin-bottom: 20px; font-size: 24px;">🎥 Promotional Video</h3>
+                          <p style="margin-bottom: 20px; font-size: 16px;">Experience the magic of Morocco through our curated adventures.</p>
+                          <p style="font-size: 14px; opacity: 0.8;">Video coming soon...</p>
+                        </div>
+                      `;
+                    };
+                    
+                    closeBtn.onclick = () => document.body.removeChild(modal);
+                    modal.onclick = (e) => {
+                      if (e.target === modal) document.body.removeChild(modal);
+                    };
+                    
+                    videoContainer.appendChild(video);
+                    videoContainer.appendChild(closeBtn);
+                    modal.appendChild(videoContainer);
+                    document.body.appendChild(modal);
+                  } else {
+                    // Show fallback content when promo video is disabled
                     videoContainer.innerHTML = `
                       <div style="padding: 40px; color: white; text-align: center;">
                         <h3 style="margin-bottom: 20px; font-size: 24px;">🎥 Promotional Video</h3>
@@ -91,17 +114,24 @@ export default function Home() {
                         <p style="font-size: 14px; opacity: 0.8;">Video coming soon...</p>
                       </div>
                     `;
-                  };
-                  
-                  closeBtn.onclick = () => document.body.removeChild(modal);
-                  modal.onclick = (e) => {
-                    if (e.target === modal) document.body.removeChild(modal);
-                  };
-                  
-                  videoContainer.appendChild(video);
-                  videoContainer.appendChild(closeBtn);
-                  modal.appendChild(videoContainer);
-                  document.body.appendChild(modal);
+                    
+                    const closeBtn = document.createElement('button');
+                    closeBtn.innerHTML = '×';
+                    closeBtn.style.cssText = `
+                      position: absolute; top: 10px; right: 15px; color: white;
+                      background: rgba(0,0,0,0.7); border: none; font-size: 24px;
+                      width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+                    `;
+                    
+                    closeBtn.onclick = () => document.body.removeChild(modal);
+                    modal.onclick = (e) => {
+                      if (e.target === modal) document.body.removeChild(modal);
+                    };
+                    
+                    videoContainer.appendChild(closeBtn);
+                    modal.appendChild(videoContainer);
+                    document.body.appendChild(modal);
+                  }
                 }}
               >
                 <Play className="w-5 h-5 mr-2" />

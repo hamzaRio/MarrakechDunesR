@@ -1,12 +1,9 @@
-export const API_URL = (() => {
-  const url = import.meta.env.VITE_API_URL as string | undefined;
-  if (!url) throw new Error('VITE_API_URL is required');
-  return url.replace(/\/+$/, '');
-})();
+export const API_URL = (import.meta.env.VITE_API_URL ?? '').replace(/\/$/, '');
+export const ASSETS_BASE = (
+  import.meta.env.VITE_ASSETS_BASE ?? (API_URL ? `${API_URL}/assets` : '')
+).replace(/\/$/, '');
 
-export const ASSETS_BASE =
-  (import.meta.env.VITE_ASSETS_BASE as string | undefined) || `${API_URL}/attached_assets`;
-
-export function asset(p: string) { 
-  return `${ASSETS_BASE}/${String(p).replace(/^[\\/]/, "")}`; 
-}
+export const asset = (p: string) => {
+  const clean = String(p || '').replace(/^\/+/, '');
+  return ASSETS_BASE ? `${ASSETS_BASE}/${clean}` : `/${clean}`;
+};

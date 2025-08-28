@@ -1,19 +1,30 @@
-title = "marrakechdunesr custom rules"
+title = "MarrakechDunes Gitleaks"
+
 [allowlist]
-description = "allow placeholders and docs"
+description = "Allowed test/placeholder content"
 paths = [
-'''^.?env.example$''',
-'''^docs/''',
-'''^CI-CD-README.md$''',
-'''^DEPLOY_CHECKS.md$'''
+  '''^\.env\.example$''',
+  '''^attached_assets/'''
 ]
 regexes = [
-'''mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority''',
-'''example-not-a-secret-.*''',
-'''^Marrakech@2025$'''
+  '''your-(jwt|session|super?admin)-password(-here)?''',
+  '''mongodb\+srv://your-username:your-password@cluster\.mongodb\.net/database-name'''
 ]
+
 [[rules]]
-id = "mongodb-atlas-uri"
-description = "MongoDB Atlas connection string"
-regex = '''mongodb+srv://[^:\s]+:[^@\s]+@[^.\s]+.mongodb.net/[^\s"'?]+(?[^\s"']+)?'''
-tags = ["key","mongodb"]
+id = "mongodb-cred-uri"
+description = "MongoDB URI with embedded credentials"
+regex = '''mongodb(\+srv)?:\/\/[^:@\s]+:[^@\s]+@[^\/\s]+\/[^\s]*'''
+tags = ["key","mongodb","secret"]
+
+[[rules]]
+id = "jwt-secret"
+description = "Looks like a JWT secret"
+regex = '''(?i)(jwt[_-]?secret)\s*[:=]\s*["']?[A-Za-z0-9_\-\.]{16,}["']?'''
+tags = ["secret","generic"]
+
+[[rules]]
+id = "generic-secret"
+description = "Generic secret-style assignment"
+regex = '''(?i)(secret|api[_-]?key|token|passwd|password)\s*[:=]\s*["']?[A-Za-z0-9_\-\.]{12,}["']?'''
+tags = ["secret","generic"]
