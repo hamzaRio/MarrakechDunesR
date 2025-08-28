@@ -51,19 +51,19 @@ tags = ["allowlist"]
 
 # Allowlist for placeholder values
 [[allowlist.regexes]]
-'''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<database>\?retryWrites=true&w=majority'''
+regex = '''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<database>\?retryWrites=true&w=majority'''
 
 [[allowlist.regexes]]
-'''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<[^>]+-database>\?retryWrites=true&w=majority'''
+regex = '''mongodb\+srv:\/\/<username>:[^@]+@<cluster>\.mongodb\.net\/<[^>]+-database>\?retryWrites=true&w=majority'''
 
 [[allowlist.regexes]]
-'''example-not-a-secret-[a-z-]+'''
+regex = '''example-not-a-secret-[a-z-]+'''
 
 [[allowlist.regexes]]
-'''mongodb\+srv:\/\/<username>:<password>@[^\/]+\/<database>\?retryWrites=true&w=majority'''
+regex = '''mongodb\+srv:\/\/<username>:<password>@[^\/]+\/<database>\?retryWrites=true&w=majority'''
 
 [[allowlist.regexes]]
-'''example-not-a-secret(-[a-z-]+)*'''
+regex = '''example-not-a-secret(-[a-z-]+)*'''
 
 [[allowlist.regexes]]
-'''dev-.*-change-me'''
+regex = '''dev-.*-change-me'''
