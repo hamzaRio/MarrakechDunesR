@@ -57,5 +57,9 @@ regexes = [
   '''example-not-a-secret-[a-z-]+''',
   '''example-not-a-secret-[a-z-]+-[a-z-]+-[a-z-]+''',
   '''example-not-a-secret-[a-z-]+-[a-z-]+-[a-z-]+-[a-z-]+''',
+  '''JWT_SECRET=example-not-a-secret-[a-z-]+-[a-z-]+-[a-z-]+-[a-z-]+''',
+  '''SESSION_SECRET=example-not-a-secret-[a-z-]+-[a-z-]+-[a-z-]+-[a-z-]+''',
+  '''ADMIN_PASSWORD=example-not-a-secret-[a-z-]+-[a-z-]+''',
+  '''SUPERADMIN_PASSWORD=example-not-a-secret-[a-z-]+-[a-z-]+''',
   '''dev-.*-change-me'''
 ]
