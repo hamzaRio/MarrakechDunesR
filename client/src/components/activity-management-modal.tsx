@@ -35,6 +35,9 @@ import { Plus, Settings, Trash2, Power, PowerOff, Upload, Image, Search, Externa
 import { ObjectUploader } from "@/components/ObjectUploader";
 import type { ActivityType } from "@shared/schema";
 import type { UploadResult } from "@uppy/core";
+const getYourGuideBase =
+  import.meta.env.VITE_GETYOURGUIDE_BASE_URL ||
+  "https://www.getyourguide.com/search?q=";
 
 const activityFormSchema = z.object({
   name: z.string().min(2, "Activity name is required"),
@@ -140,13 +143,13 @@ export default function ActivityManagementModal({
           name: priceSearchQuery + " - Premium Tour",
           price: Math.floor(Math.random() * 500) + 200,
           provider: "GetYourGuide",
-          url: "https://www.getyourguide.com/search?q=" + encodeURIComponent(priceSearchQuery)
+          url: getYourGuideBase + encodeURIComponent(priceSearchQuery)
         },
         {
           name: priceSearchQuery + " - Standard Tour",
           price: Math.floor(Math.random() * 300) + 150,
           provider: "GetYourGuide",
-          url: "https://www.getyourguide.com/search?q=" + encodeURIComponent(priceSearchQuery)
+          url: getYourGuideBase + encodeURIComponent(priceSearchQuery)
         }
       ];
       

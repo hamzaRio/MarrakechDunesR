@@ -11,6 +11,7 @@ import { Link } from "wouter";
 import PaymentManagement from "@/components/payment-management";
 import { WhatsAppNotificationPanel } from "@/components/whatsapp-notification-panel";
 import ActivityManagementModal from "@/components/activity-management-modal";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 // Removed useState import as no longer needed
 import type { BookingType, ActivityType, AuditLogType } from "@shared/schema";
@@ -61,7 +62,7 @@ export default function AdminDashboard() {
   };
 
   const handleContactCustomer = (phone: string) => {
-    window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}`, '_blank');
+    window.open(buildWhatsAppUrl(phone), '_blank');
   };
 
   const handleViewBookingDetails = (booking: BookingWithActivity) => {
@@ -80,7 +81,7 @@ Notes: ${booking.notes || 'None'}`);
   const handleSendWhatsApp = (booking: BookingWithActivity) => {
     const message = `Hello ${booking.customerName}, regarding your booking for ${booking.activity.name} for ${booking.numberOfPeople} people. Status: ${booking.status}. Total: ${booking.totalAmount} MAD.`;
     const phone = booking.customerPhone.replace(/[^0-9]/g, '');
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(buildWhatsAppUrl(phone, message), '_blank');
   };
 
   // Admin activity management functions

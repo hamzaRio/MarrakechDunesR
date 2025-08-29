@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 interface WhatsAppButtonProps {
   name: string;
@@ -10,8 +11,7 @@ interface WhatsAppButtonProps {
 export default function WhatsAppButton({ name, role, phone }: WhatsAppButtonProps) {
   const handleWhatsAppClick = () => {
     const message = `Hello ${name}, I'm interested in booking an activity with MarrakechDunes. Can you help me?`;
-    const cleanPhone = phone.replace(/[^0-9]/g, '');
-    const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = buildWhatsAppUrl(phone, message);
     window.open(whatsappUrl, '_blank');
   };
 
