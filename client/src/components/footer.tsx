@@ -1,7 +1,7 @@
 import { Instagram, Phone, MapPin } from "lucide-react";
 
-const instagramUrl = import.meta.env.VITE_INSTAGRAM_URL || "https://www.instagram.com/medina_expeditions";
-const contactPhone = import.meta.env.VITE_CONTACT_PHONE || "+212600623630";
+const instagramUrl = import.meta.env.VITE_INSTAGRAM_URL;
+const contactPhone = import.meta.env.VITE_CONTACT_PHONE;
 
 export default function Footer() {
   return (

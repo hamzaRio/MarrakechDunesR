@@ -19,6 +19,7 @@ interface ActivityPreviewProps {
 export default function ActivityPreview({ activity, isOpen, onClose, onBookNow }: ActivityPreviewProps) {
   const { t } = useLanguage();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const fallbackImage = import.meta.env.VITE_ACTIVITY_FALLBACK_IMAGE_URL;
 
   if (!activity) return null;
 
@@ -55,7 +56,9 @@ export default function ActivityPreview({ activity, isOpen, onClose, onBookNow }
                 alt={`${activity.name} - Image ${currentImageIndex + 1}`}
                 className="w-full h-full object-cover"
                 onError={(e) => {
-                  e.currentTarget.src = "https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600";
+                  if (fallbackImage) {
+                    e.currentTarget.src = fallbackImage;
+                  }
                 }}
               />
             </div>

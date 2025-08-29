@@ -201,14 +201,6 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* Hero section styling */
-.hero-bg {
-  background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
-
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
