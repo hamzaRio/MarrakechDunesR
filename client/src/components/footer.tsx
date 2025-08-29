@@ -1,5 +1,8 @@
 import { Instagram, Phone, MapPin } from "lucide-react";
 
+const instagramUrl = import.meta.env.VITE_INSTAGRAM_URL || "https://www.instagram.com/medina_expeditions";
+const contactPhone = import.meta.env.VITE_CONTACT_PHONE || "+212600623630";
+
 export default function Footer() {
   return (
     <footer className="bg-blue-900 text-white py-12">
@@ -9,8 +12,8 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-8">
             <div className="flex items-center group">
               <Instagram className="w-5 h-5 mr-3 text-moroccan-gold group-hover:scale-110 transition-transform" />
-              <a 
-                href="https://www.instagram.com/medina_expeditions" 
+              <a
+                href={instagramUrl}
                 className="text-gray-200 hover:text-white transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -18,11 +21,11 @@ export default function Footer() {
                 @medina_expeditions
               </a>
             </div>
-            
+
             <div className="flex items-center group">
               <Phone className="w-5 h-5 mr-3 text-moroccan-gold group-hover:scale-110 transition-transform" />
-              <a href="tel:+212600623630" className="text-gray-200 hover:text-white transition-colors">
-                +212 600 623 630
+              <a href={`tel:${contactPhone}`} className="text-gray-200 hover:text-white transition-colors">
+                {contactPhone}
               </a>
             </div>
             

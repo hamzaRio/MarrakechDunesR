@@ -11,6 +11,15 @@ const whatsappContacts: WhatsAppContact[] = [
   { name: "Nadia", phone: "+212654497354" },
 ];
 
+export const WHATSAPP_BASE_URL =
+  import.meta.env.VITE_WHATSAPP_BASE_URL || "https://wa.me";
+
+export function buildWhatsAppUrl(phone: string, message?: string) {
+  const cleanPhone = phone.replace(/^\+/, "");
+  const text = message ? `?text=${encodeURIComponent(message)}` : "";
+  return `${WHATSAPP_BASE_URL}/${cleanPhone}${text}`;
+}
+
 export async function sendWhatsAppBooking(booking: BookingType, activity: ActivityType) {
   const message = `🌟 NEW BOOKING ALERT 🌟
 
@@ -27,7 +36,7 @@ Please contact the customer to confirm the booking!`;
 
   // Send to all contacts
   whatsappContacts.forEach(contact => {
-    const whatsappUrl = `https://wa.me/${contact.phone}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = buildWhatsAppUrl(contact.phone, message);
     // In a real implementation, you would use the WhatsApp Business API
     // For now, we'll just log the URL
     // Development: log WhatsApp URLs for testing
@@ -54,7 +63,6 @@ export function openWhatsAppChat(contactName: string, customMessage?: string) {
 
   const defaultMessage = `Hello ${contact.name}, I'm interested in booking an activity with MarrakechDunes. Can you help me?`;
   const message = customMessage || defaultMessage;
-  const whatsappUrl = `https://wa.me/${contact.phone}?text=${encodeURIComponent(message)}`;
-  
+  const whatsappUrl = buildWhatsAppUrl(contact.phone, message);
   window.open(whatsappUrl, '_blank');
 }

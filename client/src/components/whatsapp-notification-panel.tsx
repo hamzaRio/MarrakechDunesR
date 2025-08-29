@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink, MessageCircle, Phone, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { buildWhatsAppUrl } from '@/lib/whatsapp';
 
 interface WhatsAppContact {
   name: string;
@@ -34,9 +35,7 @@ export function WhatsAppNotificationPanel({
   const [sentNotifications, setSentNotifications] = useState<string[]>([]);
 
   const handleSendWhatsApp = (phone: string, message: string, recipientName: string) => {
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${phone.replace('+', '')}?text=${encodedMessage}`;
-    
+    const whatsappUrl = buildWhatsAppUrl(phone, message);
     window.open(whatsappUrl, '_blank');
     
     setSentNotifications(prev => [...prev, phone]);

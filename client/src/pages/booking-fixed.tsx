@@ -134,9 +134,7 @@ export default function BookingFixed() {
 
   const createBookingMutation = useMutation({
     mutationFn: async (data: BookingFormData) => {
-      const response = await apiRequest("POST", "/api/bookings", data);
-      const response = await apiRequest("POST", "/api/bookings", data);
-      return response;
+      return await apiRequest("POST", "/api/bookings", data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/bookings"] });
@@ -344,7 +342,6 @@ export default function BookingFixed() {
                                 disabled={(date) => date < new Date()}
                                 modifiers={{
                                   selected: selectedDate ? [selectedDate] : [],
-                                  selected: selectedDate ? [selectedDate] : [],
                                 }}
                                 modifiersStyles={{
                                   selected: {
@@ -361,7 +358,6 @@ export default function BookingFixed() {
                                   '--rdp-outline': '2px solid #1e40af',
                                   '--rdp-outline-selected': '2px solid #1e40af',
                                   '--rdp-selected-color': 'white',
-                                } as React.CSSProperties}
                                 } as React.CSSProperties}
                                 className="rdp-custom morocco-calendar"
                               />
@@ -775,7 +771,6 @@ export default function BookingFixed() {
           numberOfPeople={pendingBookingData.numberOfPeople}
           customerName={pendingBookingData.customerName}
           customerPhone={pendingBookingData.customerPhone}
-          preferredDate={pendingBookingData.preferredDate}
           preferredDate={pendingBookingData.preferredDate}
           onConfirm={handlePaymentConfirm}
           onCancel={handlePaymentCancel}
