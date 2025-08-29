@@ -10,12 +10,12 @@ import { useLanguage } from "@/hooks/use-language";
 import { asset } from "@/lib/env";
 // Single hero background image - force refresh
 const heroBackgroundImage = asset("riad-kheirredine_1756041288677.jpg");
+const featureImage = import.meta.env.VITE_HOME_FEATURE_IMAGE_1;
+const featureFallbackImage = import.meta.env.VITE_HOME_FEATURE_IMAGE_FALLBACK;
 
 export default function Home() {
   const { t } = useLanguage();
-  const mapEmbedUrl =
-    import.meta.env.VITE_GOOGLE_MAPS_EMBED_URL ||
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3396.5891234567!2d-7.989!3d31.6295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDM3JzQ2LjIiTiA3wrA1OScyMC40Ilc!5e0!3m2!1sen!2sma!4v1234567890123";
+  const mapEmbedUrl = import.meta.env.VITE_GOOGLE_MAPS_EMBED_URL;
 
 
 
@@ -230,12 +230,14 @@ export default function Home() {
             </div>
             <div>
               <img
-                src="https://images.unsplash.com/photo-1539650116574-75c0c6d73d16?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
+                src={featureImage}
                 alt="Traditional Moroccan riad courtyard with ornate tilework"
                 className="rounded-2xl shadow-xl w-full h-auto object-cover"
                 loading="lazy"
                 onError={(e) => {
-                  e.currentTarget.src = "https://images.unsplash.com/photo-1564155219151-52b4159c8b55?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600";
+                  if (featureFallbackImage) {
+                    e.currentTarget.src = featureFallbackImage;
+                  }
                 }}
               />
             </div>

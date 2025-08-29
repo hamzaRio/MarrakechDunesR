@@ -6,6 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { MessageSquare, Send, Clock, CheckCircle, Phone, Bot } from "lucide-react";
 
+const siteUrl = import.meta.env.VITE_SITE_URL;
+const contactEmail = import.meta.env.VITE_CONTACT_EMAIL;
+
 interface WhatsAppMessage {
   id: string;
   customerPhone: string;
@@ -53,7 +56,7 @@ export default function WhatsAppBot() {
         customerPhone: '+34612345678',
         customerName: 'Carlos Rodriguez',
         message: 'Can I book for tomorrow?',
-        response: 'Hi Carlos! Yes, we have availability for tomorrow. Please visit our website to check real-time availability and complete your booking: marrakechdunes.com',
+        response: `Hi Carlos! Yes, we have availability for tomorrow. Please visit our website to check real-time availability and complete your booking: ${siteUrl}`,
         status: 'read',
         timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
         automated: true
@@ -77,14 +80,14 @@ export default function WhatsAppBot() {
       {
         id: '1',
         trigger: 'price|cost|prix|كم يكلف',
-        response: 'Here are our current prices:\n🎈 Hot Air Balloon: 2000 MAD\n🏜️ 3-Day Desert: 5000 MAD\n🌊 Essaouira Trip: 1500 MAD\n🏔️ Ourika Valley: 1500 MAD\n💧 Ouzoud Falls: 1500 MAD\n\nAll prices include transfers and meals. Book now: marrakechdunes.com',
+        response: `Here are our current prices:\n🎈 Hot Air Balloon: 2000 MAD\n🏜️ 3-Day Desert: 5000 MAD\n🌊 Essaouira Trip: 1500 MAD\n🏔️ Ourika Valley: 1500 MAD\n💧 Ouzoud Falls: 1500 MAD\n\nAll prices include transfers and meals. Book now: ${siteUrl}`,
         category: 'pricing',
         active: true
       },
       {
         id: '2',
         trigger: 'available|availability|libre|disponible|متاح',
-        response: 'To check real-time availability and book instantly, please visit our website: marrakechdunes.com\n\nOur booking system shows live availability for all activities. You can also call us at +212600623630 for immediate assistance.',
+        response: `To check real-time availability and book instantly, please visit our website: ${siteUrl}\n\nOur booking system shows live availability for all activities. You can also call us at +212600623630 for immediate assistance.`,
         category: 'availability',
         active: true
       },
@@ -98,7 +101,7 @@ export default function WhatsAppBot() {
       {
         id: '4',
         trigger: 'cancel|annuler|إلغاء',
-        response: 'To cancel your booking, please contact us immediately:\n📞 Phone: +212600623630\n✉️ Email: info@marrakechdunes.com\n\nCancellation policy: Free cancellation up to 24 hours before the activity.',
+        response: `To cancel your booking, please contact us immediately:\n📞 Phone: +212600623630\n✉️ Email: ${contactEmail}\n\nCancellation policy: Free cancellation up to 24 hours before the activity.`,
         category: 'booking',
         active: true
       },

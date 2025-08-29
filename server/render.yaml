@@ -2,8 +2,9 @@ services:
   - type: web
     name: MarrakechDunesR
     runtime: node
-    buildCommand: npm install && npm -w server run build
-    startCommand: npm -w server run start
+    rootDir: server
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
@@ -19,12 +20,10 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
-      # WhatsApp configuration
       - key: CLIENT_URL
-        value: https://marrakechdunes.vercel.app,http://localhost:5173
+        value: https://<your-vercel-app>.vercel.app,http://localhost:5173
       - key: WHATSAPP_RECEIVERS
         sync: false
-      # Do NOT define PORT here. Render sets PORT automatically.
     disk:
       name: marrakech-assets
       mountPath: /app/attached_assets

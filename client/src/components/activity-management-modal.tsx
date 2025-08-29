@@ -35,9 +35,7 @@ import { Plus, Settings, Trash2, Power, PowerOff, Upload, Image, Search, Externa
 import { ObjectUploader } from "@/components/ObjectUploader";
 import type { ActivityType } from "@shared/schema";
 import type { UploadResult } from "@uppy/core";
-const getYourGuideBase =
-  import.meta.env.VITE_GETYOURGUIDE_BASE_URL ||
-  "https://www.getyourguide.com/search?q=";
+const getYourGuideBase = import.meta.env.VITE_GETYOURGUIDE_BASE_URL;
 
 const activityFormSchema = z.object({
   name: z.string().min(2, "Activity name is required"),

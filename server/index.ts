@@ -181,9 +181,9 @@ app.use('/api', (req, res, next) => {
   next();
 });
 
-logger.info('CORS configured', { 
+logger.info('CORS configured', {
   allowedOrigins: allowedOriginsList,
-  previewPattern: 'https://marrakechdunes-*.vercel.app'
+  previewPattern: process.env.PREVIEW_DOMAIN
 });
 
 app.use(express.json());

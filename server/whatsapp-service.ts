@@ -24,6 +24,7 @@ export interface BookingNotificationData {
 
 export class WhatsAppService {
   private adminContacts: WhatsAppContact[];
+  private baseUrl = process.env.WHATSAPP_BASE_URL;
 
   constructor() {
     // Read WhatsApp receivers from environment variable
@@ -70,10 +71,10 @@ export class WhatsAppService {
     const whatsappLinks = this.adminContacts.map(admin => ({
       name: admin.name,
       phone: admin.phone,
-      link: `https://wa.me/${admin.phone.replace('+', '')}?text=${encodeURIComponent(adminMessage)}`
+      link: `${this.baseUrl}/${admin.phone.replace('+', '')}?text=${encodeURIComponent(adminMessage)}`
     }));
 
-    const customerWhatsappLink = `https://wa.me/${booking.customerPhone.replace('+', '')}?text=${encodeURIComponent(customerMessage)}`;
+    const customerWhatsappLink = `${this.baseUrl}/${booking.customerPhone.replace('+', '')}?text=${encodeURIComponent(customerMessage)}`;
 
     return {
       success: true,
@@ -104,7 +105,7 @@ export class WhatsAppService {
     const whatsappLinks = this.adminContacts.map(admin => ({
       name: admin.name,
       phone: admin.phone,
-      link: `https://wa.me/${admin.phone.replace('+', '')}?text=${encodeURIComponent(message)}`
+      link: `${this.baseUrl}/${admin.phone.replace('+', '')}?text=${encodeURIComponent(message)}`
     }));
 
     return {
@@ -253,7 +254,7 @@ ${paymentType === 'deposit'
       name: admin.name,
       phone: admin.phone,
       role: admin.role,
-      link: `https://wa.me/${admin.phone.replace('+', '')}?text=${encodeURIComponent(message)}`
+      link: `${this.baseUrl}/${admin.phone.replace('+', '')}?text=${encodeURIComponent(message)}`
     }));
   }
 

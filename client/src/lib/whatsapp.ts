@@ -11,8 +11,7 @@ const whatsappContacts: WhatsAppContact[] = [
   { name: "Nadia", phone: "+212654497354" },
 ];
 
-export const WHATSAPP_BASE_URL =
-  import.meta.env.VITE_WHATSAPP_BASE_URL || "https://wa.me";
+export const WHATSAPP_BASE_URL = import.meta.env.VITE_WHATSAPP_BASE_URL;
 
 export function buildWhatsAppUrl(phone: string, message?: string) {
   const cleanPhone = phone.replace(/^\+/, "");

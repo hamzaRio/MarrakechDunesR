@@ -1,8 +1,8 @@
 /**
  * CORS Origin Management Utility
  * Handles allowed origins from CLIENT_URL environment variable
- * Supports wildcard preview domains like https://marrakechdunes-*.vercel.app
- */
+ * Supports wildcard preview domains via PREVIEW_DOMAIN environment variable
+*/
 
 // Parse CLIENT_URL environment variable as comma-separated list
 const clientUrlString = process.env.CLIENT_URL || '';
@@ -17,16 +17,15 @@ const allowedOriginsList = clientUrlString
   .map((url) => url.trim())
   .filter(Boolean);
 
-// Preview domain regex patterns for Vercel previews
-const previewRegexes = [/^https:\/\/marrakechdunes-[a-z0-9-]+\.vercel\.app$/];
+// Preview domain configuration
+const previewDomain = process.env.PREVIEW_DOMAIN || '';
+const previewRegexes = previewDomain
+  ? [new RegExp(`^${previewDomain.replace('*', '[a-z0-9-]+').replace(/\./g, '\\.')}$`)]
+  : [];
 
 // Build CSP connect-src list
 const cspConnectSrc = Array.from(
-  new Set([
-    ...allowedOriginsList,
-    'https://marrakechdunes.vercel.app',
-    'https://marrakechdunes-*.vercel.app',
-  ]),
+  new Set([...allowedOriginsList, previewDomain].filter(Boolean)),
 );
 
 /**
